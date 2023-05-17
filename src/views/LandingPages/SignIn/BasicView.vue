@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted , reactive} from "vue";
-
+import { useStore } from 'vuex';
 // example components
 import DefaultNavbar from "@/examples/navbars/NavbarDefault.vue";
 import Header from "@/examples/Header.vue";
@@ -20,6 +20,17 @@ const user = reactive({
   id:"",
   password:"",
 });
+const store = useStore();
+async function signIn() {
+      await store.dispatch('userStore/userConfirm', user);
+      let token = sessionStorage.getItem("access-token");
+       console.log("1. confirm() token >> " + token);
+      if (this.isLogin) {
+        await this.getUserInfo(token);
+        // console.log("4. confirm() userInfo :: ", this.userInfo);
+        this.$router.push({ name: "main" });
+      }
+    }
 </script>
 <template>
   <DefaultNavbar transparent />
@@ -68,18 +79,18 @@ const user = reactive({
                 </div>
               </div>
               <div class="card-body">
-                <form role="form" class="text-start">
+                <form role="form" class="text-start" @submit.prevent>
                   <MaterialInput
                     id="id"
                     class="input-group-outline my-3"
-                    :label="{ text: 'ID', class: 'form-label' }"
+                    :label="{ text: 'id', class: 'form-label' }"
                     :user="user"
-                    type="email"
+                    type="id"
                   />
                   <MaterialInput
                     id="password"
                     class="input-group-outline mb-3"
-                    :label="{ text: 'Password', class: 'form-label' }"
+                    :label="{ text: 'password', class: 'form-label' }"
                     :user="user"
                     type="password"
                   />
@@ -97,6 +108,7 @@ const user = reactive({
                       variant="gradient"
                       color="success"
                       fullWidth
+                      v-on:click="signIn()"
                       >Sign in</MaterialButton
                     >
                   </div>

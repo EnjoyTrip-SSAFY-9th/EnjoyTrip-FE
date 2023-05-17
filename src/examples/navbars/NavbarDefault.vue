@@ -3,10 +3,15 @@ import { RouterLink } from "vue-router";
 import { ref, watch } from "vue";
 import { useWindowsWidth } from "../../assets/js/useWindowsWidth";
 
+
+import { computed } from 'vue';
+import { useStore } from 'vuex';
+
 // images
 import ArrDark from "@/assets/img/down-arrow-dark.svg";
 import downArrow from "@/assets/img/down-arrow.svg";
 import DownArrWhite from "@/assets/img/down-arrow-white.svg";
+// import userStore from "../../stores/modules/userStore";
 
 const props = defineProps({
   action: {
@@ -88,7 +93,44 @@ watch(
     }
   }
 );
-</script>
+  const store = useStore();
+
+  const userInfo = computed(() => store.state.userStore.isLogin);
+
+  function test(){
+    console.log(userInfo);
+  }
+
+  // const store = useStore();
+  // // const login = computed(() => store.state.isLogin);
+  // const data = computed(() => store.getters);
+  // // console.log(data.login);
+
+  
+
+  // computed( () => (...mapState(['userInfo']))
+  // );
+
+
+
+// </script>
+
+// <script>
+// import { computed } from 'vue';
+// import { useStore } from 'vuex';
+
+// export default {
+//   computed: {
+//     // useStore 함수로 Vuex 스토어 인스턴스를 가져옵니다.
+//     // ...mapState(['userInfo']), // 상태를 직접 매핑합니다.
+//     // 또는 다음과 같이 개별적인 매핑을 수행할 수 있습니다.
+//     userInfo() {
+//       return this.$store.state.userInfo;
+//     }
+//   }
+// };
+// </script>
+
 <template>
   <nav
     class="navbar navbar-expand-lg top-0"
