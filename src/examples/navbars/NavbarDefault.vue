@@ -11,6 +11,9 @@ import { useStore } from 'vuex';
 import ArrDark from "@/assets/img/down-arrow-dark.svg";
 import downArrow from "@/assets/img/down-arrow.svg";
 import DownArrWhite from "@/assets/img/down-arrow-white.svg";
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 // import userStore from "../../stores/modules/userStore";
 
 const props = defineProps({
@@ -95,10 +98,16 @@ watch(
 );
   const store = useStore();
 
-  const userInfo = computed(() => store.state.userStore.isLogin);
+  // const userInfo = computed(() => store.state.userStore.userInfo);
+  // const isLogin= computed(() => store.state.userStore.isLogin);
 
-  function test(){
-    console.log(userInfo);
+  async function logout(){
+    console.log("로그아웃 -> "+store.state.userStore.userInfo.id);
+    await store.dispatch('userStore/userLogout', store.state.userStore.userInfo.id);
+    store.commit('userStore/SET_IS_LOGIN', false); // 왜 store에서 커밋하는 것은 갱신이 안되고 여기서 커밋해야 state 갱신이 되는 걸까?
+    // console.log(isLogin);
+    alert("로그아웃 완료");
+    router.push({ name: "presentation" }); // 메인 페이지로 이동
   }
 
   // const store = useStore();
@@ -1013,7 +1022,7 @@ watch(
                       >
                     </a>
                   </li>
-                  <li class="nav-item list-group-item border-0 p-0">
+                  <li class="nav-item list-group-item border-0 p-0" v-if="store.state.userStore.userInfo != null && store.state.userStore.userInfo.isAdmin">
                     <a
                       class="dropdown-item py-2 ps-3 border-radius-md"
                       href=" https://www.creative-tim.com/learning-lab/vue/alerts/material-kit/"
@@ -1021,11 +1030,10 @@ watch(
                       <h6
                         class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0"
                       >
-                        Components
+                        관리자
                       </h6>
                       <span class="text-sm"
-                        >Explore our collection of fully designed
-                        components</span
+                        >회원 관리</span
                       >
                     </a>
                   </li>
@@ -1104,15 +1112,12 @@ watch(
               </div>
             </div>
           </li>
-          <!-- <li class="nav-item dropdown dropdown-hover mx-2">
-            <a
-              href="https://www.github.com/creativetimofficial/vue-material-kit"
-              class="nav-link d-flex cursor-pointer align-items-center"
-            >
+          <li class="nav-item dropdown dropdown-hover mt-1 mx-2" v-if="store.state.userStore.isLogin">
+            <a>
               <svg
                 width="20px"
                 height="20px"
-                class="material-icons me-2 opacity-6"
+                class="material-icons  opacity-6"
                 viewBox="0 0 24 24"
                 aria-hidden="true"
                 data-testid="GitHubIcon"
@@ -1122,11 +1127,11 @@ watch(
                   d="M12 1.27a11 11 0 00-3.48 21.46c.55.09.73-.28.73-.55v-1.84c-3.03.64-3.67-1.46-3.67-1.46-.55-1.29-1.28-1.65-1.28-1.65-.92-.65.1-.65.1-.65 1.1 0 1.73 1.1 1.73 1.1.92 1.65 2.57 1.2 3.21.92a2 2 0 01.64-1.47c-2.47-.27-5.04-1.19-5.04-5.5 0-1.1.46-2.1 1.2-2.84a3.76 3.76 0 010-2.93s.91-.28 3.11 1.1c1.8-.49 3.7-.49 5.5 0 2.1-1.38 3.02-1.1 3.02-1.1a3.76 3.76 0 010 2.93c.83.74 1.2 1.74 1.2 2.94 0 4.21-2.57 5.13-5.04 5.4.45.37.82.92.82 2.02v3.03c0 .27.1.64.73.55A11 11 0 0012 1.27"
                 ></path>
               </svg>
-              Github
+              {{ store.state.userStore.userInfo.id }}님
             </a>
-          </li> -->
+          </li> 
         </ul>
-        <ul class="navbar-nav d-lg-block d-none">
+        <ul class="navbar-nav d-lg-block d-none" v-if="!store.state.userStore.isLogin">
           <li class="nav-item">
             <a
               :href="action.route"
@@ -1137,13 +1142,12 @@ watch(
             >
           </li>
         </ul>
-        <ul class="navbar-nav d-lg-block d-none">
+        <ul class="navbar-nav d-lg-block d-none" v-if="store.state.userStore.isLogin">
           <li class="nav-item">
             <a
-              :href="action.route"
               class="btn btn-sm mb-0"
               :class="action.color"
-              onclick="smoothToPricing('pricing-soft-ui')"
+              v-on:click="logout();"
               >로그아웃</a
             >
           </li>

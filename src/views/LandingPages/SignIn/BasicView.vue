@@ -1,6 +1,7 @@
 <script setup>
 import { onMounted , reactive} from "vue";
 import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
 // example components
 import DefaultNavbar from "@/examples/navbars/NavbarDefault.vue";
 import Header from "@/examples/Header.vue";
@@ -16,19 +17,34 @@ onMounted(() => {
   setMaterialInput();
 });
 
+const router = useRouter();
+
 const user = reactive({
   id:"",
   password:"",
 });
+
+function updateData (data, key) {
+  user[key] = data;
+  console.log(user);
+}
 const store = useStore();
 async function signIn() {
+      console.log(user);
       await store.dispatch('userStore/userConfirm', user);
       let token = sessionStorage.getItem("access-token");
        console.log("1. confirm() token >> " + token);
-      if (this.isLogin) {
-        await this.getUserInfo(token);
-        // console.log("4. confirm() userInfo :: ", this.userInfo);
-        this.$router.push({ name: "main" });
+      if (store.state.userStore.isLogin) { // 여기는 state commit 변경 사항이 잘 적용되는데..
+        await store.dispatch('userStore/getUserInfo', token);
+        // await this.getUserInfo(token);
+        console.log("4. confirm() userInfo :: ", store.state.userStore.userInfo);
+        if(store.state.userStore.userInfo.isAdmin){
+          alert(store.state.userStore.userInfo.id+"관리자 님 환영합니다!");
+        }
+        else {
+          alert(store.state.userStore.userInfo.id+"님 환영합니다!");
+        }
+        router.push({ name: "presentation" }); // 메인 페이지로 이동
       }
     }
 </script>
@@ -85,13 +101,15 @@ async function signIn() {
                     class="input-group-outline my-3"
                     :label="{ text: 'id', class: 'form-label' }"
                     :user="user"
-                    type="id"
+                    @updateData="updateData"
+                    type="text"
                   />
                   <MaterialInput
                     id="password"
                     class="input-group-outline mb-3"
                     :label="{ text: 'password', class: 'form-label' }"
                     :user="user"
+                    @updateData="updateData"
                     type="password"
                   />
                   <MaterialSwitch
