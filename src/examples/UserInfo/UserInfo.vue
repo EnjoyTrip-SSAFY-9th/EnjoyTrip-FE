@@ -9,7 +9,9 @@ const router = useRouter();
 const store = useStore();
 const userInfo = computed(() => store.state.userStore.userInfo);
 //비밀번호 변경
-function changePassword() {}
+function changePassword() {
+  router.push({ name: "change-password" });
+}
 //회원정보 수정
 function modifyUserInfo() {
   router.push({ name: "modify" });
@@ -23,8 +25,10 @@ function deleteUserInfo() {
 <template>
   <div>
     <section class="section">
-      <div class="container mt-5">
-        <h3 class="mx-3">내 정보</h3>
+      <div class="container mt-3">
+        <div class = "col col-lg-3 offset-lg-2">
+          <h3 class="mx-3">내 정보</h3>
+        </div>
         <div class="row justify-content-center">
           <!-- <div class="col-lg-3 text-center border border-dark mx-auto my-auto" ></div> -->
           <div class="col-lg-9 text-center border border-dark mx-auto my-auto">

@@ -100,10 +100,12 @@ async function modify() {
 </script>
 <template>
   <section>
-    <div class="container mt-5">
-      <h3 class="">회원 정보 수정</h3>
-      <div class="row border border-dark">
-        <div class="col-lg-7 d-flex justify-content-center flex-column">
+    <div class="container mt-3">
+      <div class = "col col-lg-3 offset-lg-3">
+          <h3>회원 정보 수정</h3>
+        </div>
+      <div class="row justify-content-center">
+        <div class="col col-lg-6 d-flex justify-content-center flex-column border border-dark">
           <table class="table mt-3">
             <!-- <form
               role="form"
@@ -162,7 +164,10 @@ async function modify() {
             </tbody>
             <!-- </form> -->
           </table>
-          <div class="col col-lg-3 text-center">
+        </div>
+        
+      </div>
+      <div class="col col-lg-2 offset-lg-7 text-center">
             <MaterialButton
               class="my-4 mb-2"
               variant="gradient"
@@ -172,8 +177,6 @@ async function modify() {
               >회원 정보 수정</MaterialButton
             >
           </div>
-        </div>
-      </div>
     </div>
   </section>
 </template>
