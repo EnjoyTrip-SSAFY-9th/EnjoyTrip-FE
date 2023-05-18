@@ -3,15 +3,14 @@ import { RouterLink } from "vue-router";
 import { ref, watch } from "vue";
 import { useWindowsWidth } from "../../assets/js/useWindowsWidth";
 
-
-import { computed } from 'vue';
-import { useStore } from 'vuex';
-
+import { computed } from "vue";
+import { useStore } from "vuex";
+import { toast } from "vue3-toastify";
 // images
 import ArrDark from "@/assets/img/down-arrow-dark.svg";
 import downArrow from "@/assets/img/down-arrow.svg";
 import DownArrWhite from "@/assets/img/down-arrow-white.svg";
-import { useRouter } from 'vue-router';
+import { useRouter } from "vue-router";
 
 const router = useRouter();
 // import userStore from "../../stores/modules/userStore";
@@ -25,29 +24,29 @@ const props = defineProps({
     default: () => ({
       route: "/pages/landing-pages/basic",
       color: "bg-gradient-success",
-      label: "로그인"
-    })
+      label: "로그인",
+    }),
   },
   transparent: {
     type: Boolean,
-    default: false
+    default: false,
   },
   light: {
     type: Boolean,
-    default: false
+    default: false,
   },
   dark: {
     type: Boolean,
-    default: false
+    default: false,
   },
   sticky: {
     type: Boolean,
-    default: false
+    default: false,
   },
   darkText: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 });
 
 // set arrow  color
@@ -96,35 +95,46 @@ watch(
     }
   }
 );
-  const store = useStore();
+const store = useStore();
 
-  // const userInfo = computed(() => store.state.userStore.userInfo);
-  // const isLogin= computed(() => store.state.userStore.isLogin);
+// const userInfo = computed(() => store.state.userStore.userInfo);
+const isLogin = computed(() => store.state.userStore.isLogin);
 
-  async function logout(){
-    console.log("로그아웃 -> "+store.state.userStore.userInfo.id);
-    await store.dispatch('userStore/userLogout', store.state.userStore.userInfo.id);
-    store.commit('userStore/SET_IS_LOGIN', false); // 왜 store에서 커밋하는 것은 갱신이 안되고 여기서 커밋해야 state 갱신이 되는 걸까?
-    // console.log(isLogin);
-    alert("로그아웃 완료");
-    router.push({ name: "presentation" }); // 메인 페이지로 이동
-  }
+function test() {
+  store.commit("userStore/SET_IS_LOGIN", false);
+}
 
-  // const store = useStore();
-  // // const login = computed(() => store.state.isLogin);
-  // const data = computed(() => store.getters);
-  // // console.log(data.login);
+async function logout() {
+  console.log("로그아웃 -> " + store.state.userStore.userInfo.id);
+  await store.dispatch(
+    "userStore/userLogout",
+    store.state.userStore.userInfo.id
+  );
+  store.commit("userStore/SET_IS_LOGIN", false); // 왜 store에서 커밋하는 것은 갱신이 안되고 여기서 커밋해야 state 갱신이 되는 걸까?
+  // console.log(isLogin);
+  toast.success("로그아웃 완료", {
+    autoClose: 2000,
+  });
+  router.push({ name: "presentation" }); // 메인 페이지로 이동
+}
 
-  
+//마이페이지로 이동
+function myPage() {
+  router.push({ name: "mypage" });
+}
+// const store = useStore();
+// // const login = computed(() => store.state.isLogin);
+// const data = computed(() => store.getters);
+// // console.log(data.login);
 
-  // computed( () => (...mapState(['userInfo']))
-  // );
+// computed( () => (...mapState(['userInfo']))
+// );
 
+//
+</script>
 
-
-// </script>
-
-// <script>
+//
+<script>
 // import { computed } from 'vue';
 // import { useStore } from 'vuex';
 
@@ -138,7 +148,8 @@ watch(
 //     }
 //   }
 // };
-// </script>
+//
+</script>
 
 <template>
   <nav
@@ -149,7 +160,7 @@ watch(
       'my-3 blur border-radius-lg z-index-3 py-2 shadow py-2 start-0 end-0 mx-4 position-absolute mt-4':
         props.sticky,
       'navbar-light bg-white py-3': props.light,
-      ' navbar-dark bg-gradient-dark z-index-3 py-3': props.dark
+      ' navbar-dark bg-gradient-dark z-index-3 py-3': props.dark,
     }"
   >
     <div
@@ -159,12 +170,13 @@ watch(
           : 'container-fluid px-0'
       "
     >
+      <!-- <div v-on:click="test()">{{ isLogin }}</div> -->
       <RouterLink
         class="navbar-brand d-none d-md-block"
         :class="[
           (props.transparent && textDark.value) || !props.transparent
             ? 'text-dark font-weight-bolder ms-sm-3'
-            : 'text-white font-weight-bolder ms-sm-3'
+            : 'text-white font-weight-bolder ms-sm-3',
         ]"
         :to="{ name: 'presentation' }"
         rel="tooltip"
@@ -959,7 +971,7 @@ watch(
               </div>
             </div>
           </li>
-          <li class="nav-item dropdown dropdown-hover mx-2">
+          <li class="nav-item dropdown dropdown-hover mx-2" v-if="isLogin">
             <a
               role="button"
               class="nav-link ps-2 d-flex cursor-pointer align-items-center"
@@ -968,12 +980,10 @@ watch(
               data-bs-toggle="dropdown"
               aria-expanded="false"
             >
-              <i
-                class="material-icons opacity-6 me-2 text-md"
-                :class="getTextColor()"
-                >article</i
+              <i class="material-icons me-2 text-md" :class="getTextColor()"
+                >face</i
               >
-              마이페이지
+              {{ store.state.userStore?.userInfo?.id }}님
               <img
                 :src="getArrowColor()"
                 alt="down-arrow"
@@ -994,19 +1004,17 @@ watch(
                   <li class="nav-item list-group-item border-0 p-0">
                     <a
                       class="dropdown-item py-2 ps-3 border-radius-md"
-                      href=" https://www.creative-tim.com/learning-lab/vue/overview/material-kit/"
+                      href="#"
+                      v-on:click="myPage()"
                     >
                       <h6
                         class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0"
                       >
-                        회원 정보
+                        마이페이지
                       </h6>
-                      <span class="text-sm"
-                        >All about overview, quick start, license and
-                        contents</span
-                      >
                     </a>
                   </li>
+                  <!--
                   <li class="nav-item list-group-item border-0 p-0">
                     <a
                       class="dropdown-item py-2 ps-3 border-radius-md"
@@ -1035,6 +1043,20 @@ watch(
                       <span class="text-sm"
                         >회원 관리</span
                       >
+                    </a>
+                  </li>
+                  -->
+                  <li class="nav-item list-group-item border-0 p-0">
+                    <a
+                      class="dropdown-item py-2 ps-3 border-radius-md"
+                      href="#"
+                      v-on:click="logout()"
+                    >
+                      <h6
+                        class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0"
+                      >
+                        로그아웃
+                      </h6>
                     </a>
                   </li>
                 </ul>
@@ -1112,6 +1134,7 @@ watch(
               </div>
             </div>
           </li>
+          <!--
           <li class="nav-item dropdown dropdown-hover mt-1 mx-2" v-if="store.state.userStore.isLogin">
             <a>
               <svg
@@ -1130,8 +1153,12 @@ watch(
               {{ store.state.userStore.userInfo.id }}님
             </a>
           </li> 
+          -->
         </ul>
-        <ul class="navbar-nav d-lg-block d-none" v-if="!store.state.userStore.isLogin">
+        <ul
+          class="navbar-nav d-lg-block d-none"
+          v-if="!store.state.userStore.isLogin"
+        >
           <li class="nav-item">
             <a
               :href="action.route"
@@ -1142,6 +1169,7 @@ watch(
             >
           </li>
         </ul>
+        <!--
         <ul class="navbar-nav d-lg-block d-none" v-if="store.state.userStore.isLogin">
           <li class="nav-item">
             <a
@@ -1152,6 +1180,7 @@ watch(
             >
           </li>
         </ul>
+        -->
       </div>
     </div>
   </nav>

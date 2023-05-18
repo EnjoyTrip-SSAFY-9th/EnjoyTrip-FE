@@ -25,6 +25,11 @@ import ElToggles from "../layouts/sections/elements/toggles/TogglesView.vue";
 import ElTypography from "../layouts/sections/elements/typography/TypographyView.vue";
 import BoardView from "../views/Board/BoardView.vue";
 import BoardList from "../examples/Board/BoardList.vue";
+import MyPage from "../views/MyPage/MyPage.vue";
+import UserInfo from "../examples/UserInfo/UserInfo.vue";
+import ModifyUserInfo from "../examples/UserInfo/ModifyUserInfo.vue";
+import DeleteUserInfo from "../examples/UserInfo/DeleteUserInfo.vue";
+import ChangePassword from "../examples/UserInfo/ChangePassword.vue";
 import store from "@/stores/store";
 
 const onlyAuthUser = async (to, from, next) => {
@@ -174,13 +179,41 @@ const router = createRouter({
       path: "/board",
       name: "board",
       component: BoardView,
-      redirect: '/board/list',
+      redirect: "/board/list",
       children: [
         {
-        path: "list",
-        name: "list",
-        component: BoardList,
-        }
+          path: "list",
+          name: "list",
+          component: BoardList,
+        },
+      ],
+    },
+    {
+      path: "/mypage",
+      name: "mypage",
+      component: MyPage,
+      redirect: "/mypage/info",
+      children: [
+        {
+          path: "info",
+          name: "info",
+          component: UserInfo,
+        },
+        {
+          path: "modify",
+          name: "modify",
+          component: ModifyUserInfo,
+        },
+        {
+          path: "change/password",
+          name: "change-password",
+          component: ChangePassword,
+        },
+        {
+          path: "delete",
+          name: "delete",
+          component: DeleteUserInfo,
+        },
       ],
     },
   ],

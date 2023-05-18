@@ -1,7 +1,7 @@
 <script setup>
-import { onMounted , reactive} from "vue";
-import { useStore } from 'vuex';
-import { useRouter } from 'vue-router';
+import { onMounted, reactive } from "vue";
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 // example components
 import DefaultNavbar from "@/examples/navbars/NavbarDefault.vue";
 import Header from "@/examples/Header.vue";
@@ -13,6 +13,9 @@ import MaterialButton from "@/components/MaterialButton.vue";
 
 // material-input
 import setMaterialInput from "@/assets/js/material-input";
+
+import { toast } from "vue3-toastify";
+
 onMounted(() => {
   setMaterialInput();
 });
@@ -20,33 +23,46 @@ onMounted(() => {
 const router = useRouter();
 
 const user = reactive({
-  id:"",
-  password:"",
+  id: "",
+  password: "",
+});
+const error = reactive({
+  message: "",
 });
 
-function updateData (data, key) {
+function updateData(data, key) {
   user[key] = data;
   console.log(user);
 }
 const store = useStore();
 async function signIn() {
-      console.log(user);
-      await store.dispatch('userStore/userConfirm', user);
-      let token = sessionStorage.getItem("access-token");
-       console.log("1. confirm() token >> " + token);
-      if (store.state.userStore.isLogin) { // 여기는 state commit 변경 사항이 잘 적용되는데..
-        await store.dispatch('userStore/getUserInfo', token);
-        // await this.getUserInfo(token);
-        console.log("4. confirm() userInfo :: ", store.state.userStore.userInfo);
-        if(store.state.userStore.userInfo.isAdmin){
-          alert(store.state.userStore.userInfo.id+"관리자 님 환영합니다!");
+  console.log(user);
+  await store.dispatch("userStore/userConfirm", user);
+  let token = sessionStorage.getItem("access-token");
+  console.log("1. confirm() token >> " + token);
+  if (store.state.userStore.isLogin) {
+    // 여기는 state commit 변경 사항이 잘 적용되는데..
+    await store.dispatch("userStore/getUserInfo", token);
+    // await this.getUserInfo(token);
+    console.log("4. confirm() userInfo :: ", store.state.userStore.userInfo);
+    if (store.state.userStore.userInfo.isAdmin) {
+      toast.success(
+        store.state.userStore.userInfo.id + "관리자 님 환영합니다!",
+        {
+          autoClose: 1000,
         }
-        else {
-          alert(store.state.userStore.userInfo.id+"님 환영합니다!");
-        }
-        router.push({ name: "presentation" }); // 메인 페이지로 이동
-      }
+      );
+    } else {
+      toast.success(store.state.userStore.userInfo.id + "님 환영합니다!", {
+        autoClose: 1000,
+      });
+      // alert(store.state.userStore.userInfo.id + "님 환영합니다!");
     }
+    router.push({ name: "presentation" }); // 메인 페이지로 이동
+  } else {
+    error.message = "아이디 또는 비밀번호가 잘못되었습니다.";
+  }
+}
 </script>
 <template>
   <DefaultNavbar transparent />
@@ -55,7 +71,7 @@ async function signIn() {
       class="page-header align-items-start min-vh-100"
       :style="{
         backgroundImage:
-          'url(https://images.unsplash.com/photo-1497294815431-9365093b7331?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1950&q=80)'
+          'url(https://images.unsplash.com/photo-1497294815431-9365093b7331?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1950&q=80)',
       }"
       loading="lazy"
     >
@@ -119,7 +135,9 @@ async function signIn() {
                     checked
                     >Remember me</MaterialSwitch
                   >
-
+                  <div class="error-message">
+                    {{ error.message }}
+                  </div>
                   <div class="text-center">
                     <MaterialButton
                       class="my-4 mb-2"
@@ -137,7 +155,11 @@ async function signIn() {
                       class="text-success text-gradient font-weight-bold"
                       >Sign up</a
                     > -->
-                    <router-link to="/sections/input-areas/forms" class="text-success text-gradient font-weight-bold">Sign up</router-link>
+                    <router-link
+                      to="/sections/input-areas/forms"
+                      class="text-success text-gradient font-weight-bold"
+                      >Sign up</router-link
+                    >
                   </p>
                 </form>
               </div>
@@ -207,3 +229,9 @@ async function signIn() {
     </div>
   </Header>
 </template>
+<style scoped>
+.error-message {
+  color: rgba(231, 78, 78, 0.829);
+  font-size: 14px;
+}
+</style>

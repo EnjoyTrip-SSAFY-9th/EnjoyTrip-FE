@@ -15,6 +15,7 @@ Coded by www.creative-tim.com
 */
 import { RouterView } from "vue-router";
 import NavbarDefault from "@/examples/navbars/NavbarDefault.vue";
+import "vue3-toastify/dist/index.css";
 </script>
 
 <template>
