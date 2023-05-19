@@ -62,7 +62,13 @@ async function pageClick(pgno, key) {
 
 //회원 강제 탈퇴 -> 로그인중인 유저를 강제 탈퇴 시키면 어떻게 되지?
 async function deleteUser(id) {
-  await store.dispatch("adminStore/deleteUserByAdmin", id);
+  const map = {
+    userid: id,
+    pgno: search.pgno,
+    key: search.key,
+    word: search.word,
+  };
+  await store.dispatch("adminStore/deleteUserByAdmin", { map });
 }
 </script>
 <template>

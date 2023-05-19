@@ -55,24 +55,24 @@ const adminStore = {
         }
       );
     },
-    async deleteUserByAdmin({ commit, dispatch }, userid) {
+    async deleteUserByAdmin({ commit, dispatch }, { map }) {
       // let decodeToken = jwtDecode(token);
-      // console.log("회원정보수정중2");
+      console.log("회원 강제 탈퇴");
       // console.log("5. modifyUserInfo() decodeToken :: ", decodeToken);
-      console.log(userid);
+      console.log(map);
+      const search = {
+        pgno: map.pgno,
+        key: map.key,
+        word: map.word,
+      };
       await deleteUser(
-        userid,
+        map.userid,
         async ({ data }) => {
-          const search = {
-            pgno: "1",
-            key: "",
-            word: "",
-          };
           await dispatch("getUsersInfo", { search }); // 유저 리스트를 다시 불러온다.
         },
         async (error) => {
           //왜 에러가 여기서 발생하지..
-          await dispatch("getUsersInfo", this.pgno, this.key, this.word); // 유저 리스트를 다시 불러온다.
+          await dispatch("getUsersInfo", { search }); // 유저 리스트를 다시 불러온다.
 
           console.log("deleteUserInfo() error code [] ::: ");
         }
