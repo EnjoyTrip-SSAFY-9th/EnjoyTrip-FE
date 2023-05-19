@@ -55,11 +55,14 @@ function characterCheck(key) {
     error[key] = "type";
   }
 }
-
+//이름 입력받은 값을 바인딩
+function changeName(e) {
+  user["name"] = e.target.value;
+}
 function updateData(key) {
   error[key] = "";
-  console.log(user);
-  console.log(key);
+  // console.log(user);
+  // console.log(key);
   //error 여부 검사
   if (user[key] == "") {
     // 비어있는 경우
@@ -101,11 +104,13 @@ async function modify() {
 <template>
   <section>
     <div class="container mt-3">
-      <div class = "col col-lg-3 offset-lg-3">
-          <h3>회원 정보 수정</h3>
-        </div>
+      <div class="col col-lg-3 offset-lg-3">
+        <h3>회원 정보 수정</h3>
+      </div>
       <div class="row justify-content-center">
-        <div class="col col-lg-6 d-flex justify-content-center flex-column border border-dark">
+        <div
+          class="col col-lg-6 d-flex justify-content-center flex-column border border-dark"
+        >
           <table class="table mt-3">
             <!-- <form
               role="form"
@@ -122,8 +127,15 @@ async function modify() {
               <tr>
                 <td>이름</td>
                 <td>
-                  <input v-model="user.name" v-on:keyup="updateData('name')" />
+                  <input
+                    :value="user.name"
+                    @input="changeName"
+                    v-on:keyup="updateData('name')"
+                  />
                 </td>
+              </tr>
+              <tr>
+                <td></td>
                 <td>
                   <span v-if="error.name != ''" class="error-message">
                     {{ errorMSG.name[error.name] }}
@@ -155,6 +167,9 @@ async function modify() {
                     v-on:keyup="updateData('email')"
                   />
                 </td>
+              </tr>
+              <tr>
+                <td></td>
                 <td>
                   <span v-if="error.email != ''" class="error-message">
                     {{ errorMSG.email[error.email] }}
@@ -165,18 +180,17 @@ async function modify() {
             <!-- </form> -->
           </table>
         </div>
-        
       </div>
       <div class="col col-lg-2 offset-lg-7 text-center">
-            <MaterialButton
-              class="my-4 mb-2"
-              variant="gradient"
-              color="dark"
-              fullWidth
-              v-on:click="modify()"
-              >회원 정보 수정</MaterialButton
-            >
-          </div>
+        <MaterialButton
+          class="my-4 mb-2"
+          variant="gradient"
+          color="dark"
+          fullWidth
+          v-on:click="modify()"
+          >회원 정보 수정</MaterialButton
+        >
+      </div>
     </div>
   </section>
 </template>

@@ -117,10 +117,10 @@ async function logout() {
   });
   router.push({ name: "presentation" }); // 메인 페이지로 이동
 }
-
-//마이페이지로 이동
-function myPage() {
-  router.push({ name: "mypage" });
+//회원 관리 페이지로 이동
+async function admin() {
+  await store.dispatch("adminStore/getUsersInfo", "1", "", "");
+  router.push("/admin");
 }
 // const store = useStore();
 // // const login = computed(() => store.state.isLogin);
@@ -130,24 +130,6 @@ function myPage() {
 // computed( () => (...mapState(['userInfo']))
 // );
 
-//
-</script>
-
-//
-<script>
-// import { computed } from 'vue';
-// import { useStore } from 'vuex';
-
-// export default {
-//   computed: {
-//     // useStore 함수로 Vuex 스토어 인스턴스를 가져옵니다.
-//     // ...mapState(['userInfo']), // 상태를 직접 매핑합니다.
-//     // 또는 다음과 같이 개별적인 매핑을 수행할 수 있습니다.
-//     userInfo() {
-//       return this.$store.state.userInfo;
-//     }
-//   }
-// };
 //
 </script>
 
@@ -983,7 +965,7 @@ function myPage() {
               <i class="material-icons me-2 text-md" :class="getTextColor()"
                 >face</i
               >
-              {{ store.state.userStore?.userInfo?.id }}님
+              {{ store.state.userStore?.userInfo?.name }}님
               <img
                 :src="getArrowColor()"
                 alt="down-arrow"
@@ -1002,17 +984,15 @@ function myPage() {
               <div class="d-none d-lg-block">
                 <ul class="list-group">
                   <li class="nav-item list-group-item border-0 p-0">
-                    <a
+                    <router-link
+                      to="/mypage"
                       class="dropdown-item py-2 ps-3 border-radius-md"
-                      href="#"
-                      v-on:click="myPage()"
-                    >
-                      <h6
+                      ><h6
                         class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0"
                       >
                         마이페이지
-                      </h6>
-                    </a>
+                      </h6></router-link
+                    >
                   </li>
                   <!--
                   <li class="nav-item list-group-item border-0 p-0">
@@ -1030,22 +1010,36 @@ function myPage() {
                       >
                     </a>
                   </li>
-                  <li class="nav-item list-group-item border-0 p-0" v-if="store.state.userStore.userInfo != null && store.state.userStore.userInfo.isAdmin">
+                  -->
+                  <li
+                    class="nav-item list-group-item border-0 p-0"
+                    v-if="
+                      store.state.userStore.userInfo != null &&
+                      store.state.userStore.userInfo.isAdmin
+                    "
+                  >
                     <a
                       class="dropdown-item py-2 ps-3 border-radius-md"
-                      href=" https://www.creative-tim.com/learning-lab/vue/alerts/material-kit/"
+                      href="#"
+                      v-on:click="admin()"
                     >
                       <h6
                         class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0"
                       >
-                        관리자
+                        회원 관리
                       </h6>
-                      <span class="text-sm"
-                        >회원 관리</span
-                      >
                     </a>
+                    <!-- <router-link
+                      to="/admin"
+                      class="dropdown-item py-2 ps-3 border-radius-md"
+                      ><h6
+                        class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0"
+                      >
+                        회원 관리
+                      </h6></router-link
+                    > -->
                   </li>
-                  -->
+
                   <li class="nav-item list-group-item border-0 p-0">
                     <a
                       class="dropdown-item py-2 ps-3 border-radius-md"

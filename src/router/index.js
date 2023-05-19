@@ -30,6 +30,8 @@ import UserInfo from "../examples/UserInfo/UserInfo.vue";
 import ModifyUserInfo from "../examples/UserInfo/ModifyUserInfo.vue";
 import DeleteUserInfo from "../examples/UserInfo/DeleteUserInfo.vue";
 import ChangePassword from "../examples/UserInfo/ChangePassword.vue";
+import UsersView from "../views/Admin/UsersView.vue";
+import UserList from "../examples/admin/UserList.vue";
 import store from "@/stores/store";
 
 const onlyAuthUser = async (to, from, next) => {
@@ -213,6 +215,19 @@ const router = createRouter({
           path: "delete",
           name: "delete",
           component: DeleteUserInfo,
+        },
+      ],
+    },
+    {
+      path: "/admin",
+      name: "admin",
+      component: UsersView,
+      redirect: "/admin/users",
+      children: [
+        {
+          path: "users",
+          name: "users",
+          component: UserList,
         },
       ],
     },

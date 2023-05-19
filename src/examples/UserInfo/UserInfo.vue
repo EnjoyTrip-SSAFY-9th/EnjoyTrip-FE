@@ -8,25 +8,13 @@ import http from "@/api/http.js";
 const router = useRouter();
 const store = useStore();
 const userInfo = computed(() => store.state.userStore.userInfo);
-//비밀번호 변경
-function changePassword() {
-  router.push({ name: "change-password" });
-}
-//회원정보 수정
-function modifyUserInfo() {
-  router.push({ name: "modify" });
-}
-//회원 탈퇴
-function deleteUserInfo() {
-  router.push({ name: "delete" });
-}
 </script>
 
 <template>
   <div>
     <section class="section">
       <div class="container mt-3">
-        <div class = "col col-lg-3 offset-lg-2">
+        <div class="col col-lg-3 offset-lg-2">
           <h3 class="mx-3">내 정보</h3>
         </div>
         <div class="row justify-content-center">
@@ -47,14 +35,23 @@ function deleteUserInfo() {
                   <td>
                     <div class="row justify-content-center">
                       <div class="col col-lg-5">
-                        <MaterialButton
+                        <!-- <MaterialButton
                           class=""
                           variant="gradient"
                           color="dark"
                           fullWidth
                           v-on:click="changePassword()"
                           >비밀번호 변경</MaterialButton
-                        >
+                        > -->
+                        <router-link to="/mypage/change/password">
+                          <MaterialButton
+                            class=""
+                            variant="gradient"
+                            color="dark"
+                            fullWidth
+                            >비밀번호 변경</MaterialButton
+                          >
+                        </router-link>
                       </div>
                     </div>
                   </td>
@@ -72,24 +69,26 @@ function deleteUserInfo() {
           </div>
           <div class="row justify-content-center">
             <div class="col col-lg-3 text-center">
-              <MaterialButton
-                class="my-4 mb-2"
-                variant="gradient"
-                color="dark"
-                fullWidth
-                v-on:click="modifyUserInfo()"
-                >회원 정보 수정</MaterialButton
-              >
+              <router-link to="/mypage/modify">
+                <MaterialButton
+                  class="my-4 mb-2"
+                  variant="gradient"
+                  color="dark"
+                  fullWidth
+                  >회원 정보 수정</MaterialButton
+                >
+              </router-link>
             </div>
             <div class="col col-lg-3 text-center">
-              <MaterialButton
-                class="my-4 mb-2"
-                variant="gradient"
-                color="danger"
-                fullWidth
-                v-on:click="deleteUserInfo()"
-                >회원 탈퇴</MaterialButton
-              >
+              <router-link to="/mypage/delete">
+                <MaterialButton
+                  class="my-4 mb-2"
+                  variant="gradient"
+                  color="danger"
+                  fullWidth
+                  >회원 탈퇴</MaterialButton
+                >
+              </router-link>
             </div>
           </div>
         </div>
