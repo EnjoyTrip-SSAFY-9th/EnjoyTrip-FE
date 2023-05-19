@@ -41,8 +41,24 @@ function changeWord(e) {
 async function searchUser() {
   await store.dispatch("adminStore/getUsersInfo", { search });
 }
-//회원 정보 보이기
-function showUser(id) {}
+//페이지 이동
+async function pageClick(pgno, key) {
+  console.log(pgno, key);
+  console.log(navigation.value.startRange);
+  if (key == "before") {
+    if (navigation.value.startRange) {
+      pgno = 1;
+    } else pgno = pgno - 1;
+  }
+  if (key == "next") {
+    if (!navigation.value.endRange) {
+      pgno = pgno + 1;
+    }
+  }
+  search.pgno = pgno;
+  console.log(search);
+  await store.dispatch("adminStore/getUsersInfo", { search });
+}
 
 //회원 강제 탈퇴 -> 로그인중인 유저를 강제 탈퇴 시키면 어떻게 되지?
 async function deleteUser(id) {
@@ -87,7 +103,7 @@ async function deleteUser(id) {
                 />
                 <button
                   id="btn-search"
-                  class="btn btn-dark"
+                  class="btn btn-info"
                   type="button"
                   v-on:click="searchUser()"
                 >
@@ -97,8 +113,8 @@ async function deleteUser(id) {
             </form>
           </div>
         </div>
-        <table class="table w-75 m-auto mb-3">
-          <thead class="table-dark">
+        <table class="table table-hover w-75 m-auto mb-3">
+          <thead class="table-info">
             <tr>
               <th>번호</th>
               <th>이름</th>
@@ -111,7 +127,7 @@ async function deleteUser(id) {
           <tbody id="userinfo">
             <tr v-for="(user, index) in users" :key="user.id">
               <td v-text="index + 1"></td>
-              <td v-text="user.name" v-on:click="showUser(user.id)"></td>
+              <td v-text="user.name"></td>
               <td v-text="user.id"></td>
               <td v-text="user.email"></td>
               <td>{{ user.joinDate }}</td>
@@ -150,7 +166,63 @@ async function deleteUser(id) {
           </tbody>
         </table>
       </div>
-      <div v-html="navigation.navigator"></div>
+      <ul class="pagination justify-content-center">
+        <li class="page-item">
+          <a href="#" class="page-link" v-on:click="pageClick('1', 'first')"
+            >최신</a
+          >
+        </li>
+        <li class="page-item">
+          <a
+            href="#"
+            class="page-link"
+            v-on:click="pageClick(navigation.navigator[0], 'before')"
+            >이전</a
+          >
+        </li>
+        <li
+          v-for="(page, index) in navigation.navigator"
+          :key="index"
+          class="page-item"
+        >
+          <a
+            href="#"
+            class="page-link bg-info"
+            v-on:click="pageClick(page, '')"
+            v-if="page == navigation.currentPage"
+            >{{ page }}</a
+          >
+          <a
+            href="#"
+            class="page-link"
+            v-on:click="pageClick(page, '')"
+            v-if="page != navigation.currentPage"
+            >{{ page }}</a
+          >
+        </li>
+        <li class="page-item">
+          <a
+            href="#"
+            class="page-link"
+            v-on:click="
+              pageClick(
+                navigation.navigator[navigation.navigator.length - 1],
+                'next'
+              )
+            "
+            >다음</a
+          >
+        </li>
+        <li class="page-item">
+          <a
+            href="#"
+            class="page-link"
+            v-on:click="pageClick(navigation.totalPageCount, 'last')"
+            >마지막</a
+          >
+        </li>
+      </ul>
+      <!-- <div v-html="navigation.navigator"></div> -->
     </div>
   </div>
   <form id="form-param" method="get" action="">

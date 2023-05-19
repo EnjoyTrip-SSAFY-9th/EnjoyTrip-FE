@@ -63,19 +63,18 @@ const adminStore = {
       await deleteUser(
         userid,
         async ({ data }) => {
-          if (data.message === "success") {
-            await dispatch("getUsersInfo", this.pgno, this.key, this.word); // 유저 리스트를 다시 불러온다.
-          } else {
-            console.log("유저 정보 없음!!!!");
-          }
+          const search = {
+            pgno: "1",
+            key: "",
+            word: "",
+          };
+          await dispatch("getUsersInfo", { search }); // 유저 리스트를 다시 불러온다.
         },
         async (error) => {
-          console.log(
-            "modifyUserInfo() error code [토큰 만료되어 사용 불가능.] ::: ",
-            error.response.status
-          );
-          commit("SET_IS_VALID_TOKEN", false);
-          await dispatch("tokenRegeneration");
+          //왜 에러가 여기서 발생하지..
+          await dispatch("getUsersInfo", this.pgno, this.key, this.word); // 유저 리스트를 다시 불러온다.
+
+          console.log("deleteUserInfo() error code [] ::: ");
         }
       );
     },
