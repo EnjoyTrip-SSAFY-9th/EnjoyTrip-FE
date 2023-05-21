@@ -31,4 +31,8 @@ async function recommendBoard({param}, success, fail) {
   }).then(success).catch(fail);
 }
 
-export { getBoardList, showBoardDetail, writeBoard, modifyBoard, deleteBoard, recommendBoard };
+async function decreaseCommentCnt(articleNo, success, fail) {
+  await api.put(`/board/${articleNo}`).then(success).catch(fail);
+}
+
+export { getBoardList, showBoardDetail, writeBoard, modifyBoard, deleteBoard, recommendBoard, decreaseCommentCnt };

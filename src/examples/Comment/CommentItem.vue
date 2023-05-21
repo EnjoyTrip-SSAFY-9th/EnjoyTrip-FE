@@ -1,6 +1,6 @@
 <script setup>
 import MaterialButton from "@/components/MaterialButton.vue";
-import { useStore } from "vuex";
+import { Store, useStore } from "vuex";
 import { reactive } from "vue";
 import http from "@/api/http.js";
 
@@ -44,6 +44,7 @@ async function deleteC(){
         articleNo: props.comment.articleNo
     }
     await store.dispatch("commentStore/deleteC", param);
+    await store.dispatch("boardStore/decreaseComments", param.articleNo);
 }
 </script>
 

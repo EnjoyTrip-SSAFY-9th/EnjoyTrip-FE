@@ -6,7 +6,8 @@ import {
   writeBoard,
   modifyBoard,
   deleteBoard,
-  recommendBoard
+  recommendBoard,
+  decreaseCommentCnt
 } from "@/api/board";
 // import http from "@/api/http.js";
 const boardStore = {
@@ -172,6 +173,19 @@ const boardStore = {
         },
         async (error) => {
           console.log("recommend Board error code [] ::: ", error.response.status);
+        }
+      );
+    },
+    async decreaseComments({ commit, dispatch }, articleNo) {
+      console.log(articleNo);
+      await decreaseCommentCnt(
+        articleNo,
+        async ({ data }) => {
+          await dispatch("getBoard", articleNo); // 게시글 다시 불러오기
+          console.log("decrease comment >> ", param);
+        },
+        async (error) => {
+          console.log("decrease comment error code [] ::: ", error.response.status);
         }
       );
     },
