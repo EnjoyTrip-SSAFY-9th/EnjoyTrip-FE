@@ -100,9 +100,6 @@ const store = useStore();
 // const userInfo = computed(() => store.state.userStore.userInfo);
 const isLogin = computed(() => store.state.userStore.isLogin);
 
-function test() {
-  store.commit("userStore/SET_IS_LOGIN", false);
-}
 
 async function logout() {
   console.log("로그아웃 -> " + store.state.userStore.userInfo.id);
@@ -110,7 +107,7 @@ async function logout() {
     "userStore/userLogout",
     store.state.userStore.userInfo.id
   );
-  store.commit("userStore/SET_IS_LOGIN", false); // 왜 store에서 커밋하는 것은 갱신이 안되고 여기서 커밋해야 state 갱신이 되는 걸까?
+  // store.commit("userStore/SET_IS_LOGIN", false); // 왜 store에서 커밋하는 것은 갱신이 안되고 여기서 커밋해야 state 갱신이 되는 걸까?
   // console.log(isLogin);
   toast.success("로그아웃 완료", {
     autoClose: 2000,

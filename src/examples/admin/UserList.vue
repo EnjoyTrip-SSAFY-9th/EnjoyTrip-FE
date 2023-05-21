@@ -44,7 +44,7 @@ async function searchUser() {
 //페이지 이동
 async function pageClick(pgno, key) {
   console.log(pgno, key);
-  console.log(navigation.value.startRange);
+  console.log(navigation);
   if (key == "before") {
     if (navigation.value.startRange) {
       pgno = 1;
@@ -132,7 +132,8 @@ async function deleteUser(id) {
           </thead>
           <tbody id="userinfo">
             <tr v-for="(user, index) in users" :key="user.id">
-              <td v-text="index + 1"></td>
+              <!-- <td v-text="index + 1"></td> -->
+              <td v-text="(index + 1)+((search.pgno-1)*navigation.countPerPage)"></td>
               <td v-text="user.name"></td>
               <td v-text="user.id"></td>
               <td v-text="user.email"></td>

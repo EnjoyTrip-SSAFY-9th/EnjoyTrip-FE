@@ -40,6 +40,7 @@ const adminStore = {
       await getUsers(
         { search },
         ({ data }) => {
+          console.log(data);
           commit("SET_PGNO", data.pgno);
           commit("SET_KEY", data.key);
           commit("SET_WORD", data.word);

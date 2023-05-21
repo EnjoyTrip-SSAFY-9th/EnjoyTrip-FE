@@ -25,6 +25,9 @@ import ElToggles from "../layouts/sections/elements/toggles/TogglesView.vue";
 import ElTypography from "../layouts/sections/elements/typography/TypographyView.vue";
 import BoardView from "../views/Board/BoardView.vue";
 import BoardList from "../examples/Board/BoardList.vue";
+import BoardDetail from "../examples/Board/BoardDetail.vue";
+import BoardWrite from "../examples/Board/BoardWrite.vue";
+import BoardUpdate from "../examples/Board/BoardUpdate.vue";
 import MyPage from "../views/MyPage/MyPage.vue";
 import UserInfo from "../examples/UserInfo/UserInfo.vue";
 import ModifyUserInfo from "../examples/UserInfo/ModifyUserInfo.vue";
@@ -35,24 +38,37 @@ import UserList from "../examples/admin/UserList.vue";
 import store from "@/stores/store";
 
 const onlyAuthUser = async (to, from, next) => {
-  const checkUserInfo = store.getters["memberStore/checkUserInfo"];
-  const checkToken = store.getters["memberStore/checkToken"];
+  const checkUserInfo = store.getters["userStore/checkUserInfo"];
+  const checkToken = store.getters["userStore/checkToken"];
   let token = sessionStorage.getItem("access-token");
   console.log("로그인 처리 전", checkUserInfo, token);
 
   if (checkUserInfo != null && token) {
     console.log("토큰 유효성 체크하러 가자!!!!");
-    await store.dispatch("memberStore/getUserInfo", token);
+    await store.dispatch("userStore/getUserInfo", token);
   }
   if (!checkToken || checkUserInfo === null) {
+    store.commit("userStore/SET_IS_LOGIN", false);
     alert("로그인이 필요한 페이지입니다..");
     // next({ name: "login" });
-    router.push({ name: "login" });
+    router.push({ name: "signin-basic" });
   } else {
     console.log("로그인 했다!!!!!!!!!!!!!.");
     next();
   }
 };
+
+const getBoards = async(to, from, next) => {
+  const search = {
+    type: store.state.boardStore.type,
+    pgno: store.state.boardStore.pgno,
+    key: store.state.boardStore.key,
+    word: store.state.boardStore.word,
+  };
+  await store.dispatch("boardStore/getBoards", {search});
+  next();
+}
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -80,7 +96,7 @@ const router = createRouter({
     {
       path: "/pages/landing-pages/basic",
       name: "signin-basic",
-      component: SignInBasicView,
+      component: SignInBasicView, // 로그인
     },
     {
       path: "/sections/page-sections/page-headers",
@@ -186,7 +202,26 @@ const router = createRouter({
         {
           path: "list",
           name: "list",
+          beforeEnter: getBoards,
           component: BoardList,
+        },
+        {
+          path: "detail",
+          name: "detail",
+          beforeEnter: onlyAuthUser,
+          component: BoardDetail,
+        },
+        {
+          path: "write",
+          name: "write",
+          beforeEnter: onlyAuthUser,
+          component: BoardWrite,
+        },
+        {
+          path: "update",
+          name: "update",
+          beforeEnter: onlyAuthUser,
+          component: BoardUpdate,
         },
       ],
     },

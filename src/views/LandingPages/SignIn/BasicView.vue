@@ -65,7 +65,6 @@ async function signIn() {
 }
 </script>
 <template>
-  <DefaultNavbar transparent />
   <Header>
     <div
       class="page-header align-items-start min-vh-100"
