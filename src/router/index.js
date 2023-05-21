@@ -33,6 +33,7 @@ import ChangePassword from "../examples/UserInfo/ChangePassword.vue";
 import UsersView from "../views/Admin/UsersView.vue";
 import UserList from "../examples/admin/UserList.vue";
 import store from "@/stores/store";
+import Trip from "../examples/trip/Trip.vue";
 
 const onlyAuthUser = async (to, from, next) => {
   const checkUserInfo = store.getters["memberStore/checkUserInfo"];
@@ -230,6 +231,11 @@ const router = createRouter({
           component: UserList,
         },
       ],
+    },
+    {
+      path: "/trip",
+      name: "trip",
+      component: Trip,
     },
   ],
 });
