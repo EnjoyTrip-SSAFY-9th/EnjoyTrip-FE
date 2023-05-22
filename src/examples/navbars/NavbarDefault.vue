@@ -100,7 +100,6 @@ const store = useStore();
 // const userInfo = computed(() => store.state.userStore.userInfo);
 const isLogin = computed(() => store.state.userStore.isLogin);
 
-
 async function logout() {
   console.log("로그아웃 -> " + store.state.userStore.userInfo.id);
   await store.dispatch(
@@ -176,7 +175,7 @@ async function admin() {
         title="Designed and Coded by Creative Tim"
         data-placement="bottom"
       >
-        Material Design
+        Wanderlustify
       </RouterLink>
       <!-- <a
         href="https://www.creative-tim.com/product/vue-material-kit-pro"
@@ -255,7 +254,7 @@ async function admin() {
                         <span>여행 정보 공유</span>
                       </RouterLink>
                       <RouterLink
-                        :to="{ name: 'author' }"
+                        :to="{ name: 'mytrip' }"
                         class="dropdown-item border-radius-md"
                       >
                         <span>여행 계획</span>

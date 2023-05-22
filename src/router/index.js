@@ -37,6 +37,7 @@ import UsersView from "../views/Admin/UsersView.vue";
 import UserList from "../examples/admin/UserList.vue";
 import store from "@/stores/store";
 import Trip from "../examples/trip/Trip.vue";
+import MyTrip from "../examples/mytrip/MyTrip.vue";
 
 const onlyAuthUser = async (to, from, next) => {
   const checkUserInfo = store.getters["userStore/checkUserInfo"];
@@ -59,17 +60,16 @@ const onlyAuthUser = async (to, from, next) => {
   }
 };
 
-const getBoards = async(to, from, next) => {
+const getBoards = async (to, from, next) => {
   const search = {
     type: store.state.boardStore.type,
     pgno: store.state.boardStore.pgno,
     key: store.state.boardStore.key,
     word: store.state.boardStore.word,
   };
-  await store.dispatch("boardStore/getBoards", {search});
+  await store.dispatch("boardStore/getBoards", { search });
   next();
-}
-
+};
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -271,6 +271,11 @@ const router = createRouter({
       path: "/trip",
       name: "trip",
       component: Trip,
+    },
+    {
+      path: "/mytrip",
+      name: "mytrip",
+      component: MyTrip,
     },
   ],
 });
