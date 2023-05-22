@@ -1,5 +1,6 @@
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
+import { useQuery } from "@tanstack/vue-query";
 import TripMap from "./TripMap.vue";
 import TripSearch from "./TripSearch.vue";
 import TripDetailList from "./TripDetailList.vue";
@@ -8,22 +9,69 @@ const select = ref({
   sido: "",
   gugun: "",
   type: "",
+  search: "",
 });
 
-const enable = ref(false);
+const totalPage = ref(1);
+const page = ref(1);
+const perPage = 12;
 
 const changeSido = (sido) => {
   select.value.sido = sido;
+  page.value = 1;
 };
 const changeGugun = (gugun) => {
   select.value.gugun = gugun;
+  page.value = 1;
 };
 const changeType = (type) => {
   select.value.type = type;
+  page.value = 1;
 };
 
+const sidocode = computed(() => select.value?.sido);
+const guguncode = computed(() => select.value?.gugun);
+const typecode = computed(() => select.value?.type);
+const search = computed(() => select.value?.search);
+const enabled = computed(
+  () => !!select.value?.sido && !!select.value?.gugun && !!select.value?.type
+);
 
+const { data: list } = useQuery({
+  queryKey: ["attraction", sidocode, guguncode, typecode, search, page],
+  queryFn: () =>
+    fetchAttraction(
+      sidocode.value,
+      guguncode.value,
+      typecode.value,
+      search.value,
+      page.value
+    ),
+  enabled,
+});
 
+// 공공데이터 서비스 키
+const serviceKey =
+  "MsJ8m3KE1BZRPPU4a%2B4glQobhuo6032W3s7fL90AnUrHal0TqMrveuvQyEEs%2FP9VexVGAo%2BvJSn%2B1RtSF2DBFQ%3D%3D";
+
+// // 공공데이터 여행지 호출
+async function fetchAttraction(
+  areaCode,
+  gugunCode,
+  contentTypeId,
+  keyword,
+  page
+) {
+  let searchUrl = keyword
+    ? `https://apis.data.go.kr/B551011/KorService1/searchKeyword1?serviceKey=${serviceKey}&contentTypeId=${contentTypeId}&areaCode=${areaCode}&sigunguCode=${gugunCode}&MobileOS=ETC&MobileApp=TestApp&_type=json&numOfRows=${perPage}&keyword=${keyword}&pageNo=${page}`
+    : `https://apis.data.go.kr/B551011/KorService1/areaBasedList1?serviceKey=${serviceKey}&contentTypeId=${contentTypeId}&areaCode=${areaCode}&sigunguCode=${gugunCode}&MobileOS=ETC&MobileApp=TestApp&_type=json&numOfRows=${perPage}&pageNo=${page}`;
+  const response = await fetch(searchUrl);
+  const data = await response.json();
+  const item = await data.response.body.items.item;
+  totalPage.value = ((await data.response.body.totalCount) - 1) / perPage + 1;
+  if (!item || item.length == 0) return [];
+  return data.response.body.items.item;
+}
 </script>
 <template>
   <div class="trip-container">
@@ -34,9 +82,19 @@ const changeType = (type) => {
       @changeGugun="changeGugun"
       @changeType="changeType"
     />
-    <TripMap :select="select" :enable="enable" />
+    <TripMap :list="list" />
+    {{ totalCount }}
+    <div class="paging">
+      <v-pagination
+        v-model="page"
+        :length="totalPage"
+        :total-visible="4"
+        prev-icon="mdi-menu-left"
+        next-icon="mdi-menu-right"
+      ></v-pagination>
+    </div>
     <div>
-      <TripDetailList :select="select" />
+      <TripDetailList :list="list" />
     </div>
   </div>
 </template>
@@ -47,5 +105,9 @@ const changeType = (type) => {
   align-items: center;
   flex-direction: column;
   margin-top: 10vh;
+}
+
+.paging {
+  margin-top: 30px;
 }
 </style>

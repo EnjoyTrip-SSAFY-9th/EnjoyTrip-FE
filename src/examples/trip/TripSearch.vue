@@ -9,6 +9,7 @@ const props = defineProps({
       sido: "",
       gugun: "",
       type: "",
+      search: "",
     }),
   },
 });
@@ -114,6 +115,8 @@ const changeType = (type) => {
       label="관광지유형"
       required
     ></v-select>
+
+    <v-text-field v-model="select.search" label="검색어"></v-text-field>
   </div>
 </template>
 <style scoped>

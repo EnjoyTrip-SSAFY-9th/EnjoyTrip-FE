@@ -1,56 +1,25 @@
 <script setup>
-import { onMounted, ref, computed } from "vue";
+import { onMounted, ref, computed, reactive, watch } from "vue";
 import { useQuery } from "@tanstack/vue-query";
 
 const props = defineProps({
-  select: {
-    type: Object,
-    default: () => ({
-      sido: "",
-      gugun: "",
-      type: "",
-    }),
+  list: {
+    type: Array,
+    default: () => [],
   },
 });
+let map = null;
+let markers = [];
 
-const select = ref(props.select);
-
-const sidocode = computed(() => select.value?.sido);
-const guguncode = computed(() => select.value?.gugun);
-const typecode = computed(() => select.value?.type);
-const enabled = computed(
-  () => !!select.value?.sido && !!select.value?.gugun && !!select.value?.type
-);
-
-const { data: list } = useQuery({
-  queryKey: ["attraction", sidocode, guguncode, typecode],
-  queryFn: () =>
-    fetchAttraction(sidocode.value, guguncode.value, typecode.value),
-  onSuccess: (data) => {
-    makeList(data);
-    console.log(data);
-  },
-  enabled,
+const data = computed(() => {
+  return props.list;
 });
 
-// 공공데이터 서비스 키
-const serviceKey =
-  "MsJ8m3KE1BZRPPU4a%2B4glQobhuo6032W3s7fL90AnUrHal0TqMrveuvQyEEs%2FP9VexVGAo%2BvJSn%2B1RtSF2DBFQ%3D%3D";
-
-// // 공공데이터 여행지 호출
-async function fetchAttraction(areaCode, gugunCode, contentTypeId) {
-  let searchUrl = `https://apis.data.go.kr/B551011/KorService1/areaBasedList1?serviceKey=${serviceKey}&contentTypeId=${contentTypeId}&areaCode=${areaCode}&sigunguCode=${gugunCode}&MobileOS=ETC&MobileApp=TestApp&_type=json&numOfRows=20`;
-  const response = await fetch(searchUrl);
-  const data = await response.json();
-  return data.response.body.items.item;
-  // makeList(data.response.body.items.item);
-}
-
-// function add(dataset) {
-//   const { contentid } = dataset;
-//   console.log(contentid);
-//   fetch(`/attraction/addMyTrip?contentId=${contentid}`);
-// }
+watch(data, (newValue) => {
+  if (newValue.length > 0) {
+    makeList(newValue);
+  }
+});
 
 const loadScript = () => {
   const script = document.createElement("script");
@@ -59,7 +28,7 @@ const loadScript = () => {
   script.onload = () => window.kakao.maps.load(loadMap);
   document.head.appendChild(script);
 };
-let map = null;
+
 const loadMap = () => {
   const container = document.getElementById("map"); //지도를 담을 영역의 DOM 레퍼런스
   const options = {
@@ -70,8 +39,6 @@ const loadMap = () => {
 
   map = new window.kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
 };
-
-let markers = [];
 
 function displayMarker(positions) {
   setMarkers(null);
@@ -125,8 +92,12 @@ function displayMarker(positions) {
 
     markers.push(marker);
 
-    window.kakao.maps.event.addListener(marker, "click", () => {
+    window.kakao.maps.event.addListener(marker, "mouseover", () => {
       infowindow.open(map, marker);
+    });
+
+    window.kakao.maps.event.addListener(marker, "mouseout", () => {
+      infowindow.close(map, marker);
     });
 
     window.kakao.maps.event.addListener(infowindow, "click", () => {
@@ -172,7 +143,7 @@ function makeList(item) {
     };
   });
 
-  console.log(positions);
+  // console.log(positions);
   hideMarkers();
   markers = [];
   displayMarker(positions);
@@ -201,6 +172,12 @@ function relayout() {
   // 크기를 변경한 이후에는 반드시  map.relayout 함수를 호출해야 합니다
   // window의 resize 이벤트에 의한 크기변경은 map.relayout 함수가 자동으로 호출됩니다
   map.relayout();
+}
+
+function add(dataset) {
+  const { contentid } = dataset;
+  console.log(contentid);
+  fetch(`/attraction/addMyTrip?contentId=${contentid}`);
 }
 
 onMounted(() => {
