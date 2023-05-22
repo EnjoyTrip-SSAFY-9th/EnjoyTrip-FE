@@ -243,7 +243,7 @@ async function admin() {
                         여행
                       </div>
                       <RouterLink
-                        :to="{ name: 'contactus' }"
+                        :to="{ name: 'trip' }"
                         class="dropdown-item border-radius-md"
                       >
                         <span>지역별 관광지</span>
