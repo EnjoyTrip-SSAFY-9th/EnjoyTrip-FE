@@ -19,12 +19,14 @@ import "vue3-toastify/dist/index.css";
 </script>
 
 <template>
-  <div class="container position-sticky z-index-sticky top-0">
-    <div class="row">
-      <div class="col-12">
-        <NavbarDefault :sticky="true" />
+  <div>
+    <div class="container position-sticky z-index-sticky top-0">
+      <div class="row">
+        <div class="col-12">
+          <NavbarDefault :sticky="true" />
+        </div>
       </div>
     </div>
+    <router-view />
   </div>
-  <router-view />
 </template>

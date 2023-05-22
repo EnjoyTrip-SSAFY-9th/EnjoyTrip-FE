@@ -8,6 +8,7 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "@mdi/font": "^7.2.96",
     "@popperjs/core": "2.11.5",
     "@tanstack/vue-query": "^4.29.7",
     "axios": "^1.4.0",
