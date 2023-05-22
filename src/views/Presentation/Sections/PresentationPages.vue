@@ -7,22 +7,6 @@ import imgSigninCover from "@/assets/img/signin-cover.png";
 </script>
 <template>
   <section class="py-5">
-    <div class="container">
-      <div class="row">
-        <div class="row text-center my-sm-5 mt-5">
-          <div class="col-lg-6 mx-auto">
-            <MaterialBadge color="success" class="mb-3"
-              >Boost creativity</MaterialBadge
-            >
-            <h2 class="">With our coded pages</h2>
-            <p class="lead">
-              The easiest way to get started is to use one of our <br />
-              pre-built example pages.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
     <div class="container mt-5">
       <div class="row">
         <div class="col-md-8">
@@ -65,13 +49,9 @@ import imgSigninCover from "@/assets/img/signin-cover.png";
         </div>
         <div class="col-md-3 mx-auto mt-md-0 mt-3">
           <div class="position-sticky" style="top: 100px !important">
-            <h3>
-              Presentation Pages for Company, Landing Pages, Blogs and Support
+            <h3 style="margin-top: 20px">
+              일상의 틀을 깨고 즐거움으로 가득한 여행을 경험하세요.
             </h3>
-            <h6 class="text-secondary font-weight-normal">
-              These is just a small selection of the multiple possibitilies you
-              have. Focus on the business, not on the design.
-            </h6>
           </div>
         </div>
       </div>
