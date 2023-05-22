@@ -12,7 +12,6 @@ const store = useStore();
 
 //검색에 필요한 pgno, key, word
 const search = reactive({
-  type: computed(() => store.state.boardStore.type),
   pgno: "1",
   key: "",
   word: "",
@@ -20,8 +19,8 @@ const search = reactive({
 
 // getUsers로 받은 데이터 맵
 // const map = ref("");
-const navigation = computed(() => store.state.boardStore.navigation);
-const articles = computed(() => store.state.boardStore.boards);
+const navigation = computed(() => store.state.hotplaceStore.navigation);
+const articles = computed(() => store.state.hotplaceStore.hotplaces);
 
 // const showTime = computed(() => map.users.user);
 // getUsers();
@@ -40,16 +39,15 @@ function changeWord(e) {
   console.log(search);
 }
 // 회원 검색
-async function searchBoard() {
+async function searchHotPlace() {
   console.log(search);
-  await store.dispatch("boardStore/getBoards", { search });
+  await store.dispatch("hotplaceStore/gethotplaces", { search });
 }
 //게시글 상세보기
 async function detail(articleNo) {
   console.log(articleNo);
-  await store.dispatch("boardStore/getBoard", articleNo);
-  await store.dispatch("commentStore/getComments", articleNo);
-  router.push("/board/detail");
+  await store.dispatch("hotplaceStore/gethotplace", articleNo);
+  router.push("/hotplace/detail");
 }
 //페이지 이동
 async function pageClick(pgno, key) {
@@ -67,11 +65,11 @@ async function pageClick(pgno, key) {
   }
   search.pgno = pgno;
   console.log(search);
-  await store.dispatch("boardStore/getBoards", { search });
+  await store.dispatch("hotplaceStore/gethotplaces", { search });
 }
 //글작성
-function writeBoard() {
-  router.push("/board/write");
+function writeHotPlace() {
+  router.push("/hotplace/write");
 }
 
 //마우스 커서 바꾸기
@@ -87,14 +85,14 @@ function restoreCursor() {
   <div class="container" data-aos="fade-up">
     <div class="row no-gutters" style="background-color: white">
       <div class="p-5 text-center">
-        <h3 class="my-5 fw-bold">여행정보공유</h3>
+        <h3 class="my-5 fw-bold">핫플레이스</h3>
         <div class="row w-75 mx-auto mb-3">
           <div class="col-md-2 m-0" v-if="store.state.userStore.isLogin">
             <button
               id="btn-search"
               class="btn btn-success"
               type="button"
-              v-on:click="writeBoard"
+              v-on:click="writeHotPlace"
             >
               글쓰기
             </button>
@@ -114,7 +112,7 @@ function restoreCursor() {
                 aria-label="검색조건"
               >
                 <option selected>검색조건</option>
-                <option value="subject">제목</option>
+                <option value="title">제목</option>
                 <option value="username">작성자</option>
                 <option value="content">내용</option>
               </select>
@@ -134,7 +132,7 @@ function restoreCursor() {
                   id="btn-search"
                   class="btn btn-success"
                   type="button"
-                  v-on:click="searchBoard()"
+                  v-on:click="searchHotPlace()"
                 >
                   검색
                 </button>
@@ -143,31 +141,33 @@ function restoreCursor() {
           </div>
         </div>
         <table class="table table-hover w-75 m-auto mb-3">
-          <colgroup>
+          <!-- <colgroup>
             <col width="10%" />
             <col width="50%" />
             <col width="10%" />
             <col width="10%" />
             <col width="10%" />
             <col width="10%" />
-          </colgroup>
+          </colgroup> -->
           <thead class="table-success">
             <tr>
-              <th>글번호</th>
+              <!-- <th>글번호</th>
               <th>제목</th>
               <th>작성자</th>
               <th>조회수</th>
               <th>추천수</th>
-              <th>작성일</th>
+              <th>작성일</th> -->
+              <th>핫플레이스</th>
             </tr>
           </thead>
           <tbody id="articleinfo">
-            <tr v-for="(article, index) in articles" :key="article.articleNo">
+            <tr v-for="(article, index) in articles" :key="article.hotplaceNo">
+              <td></td>
               <!-- <td v-text="index + 1"></td> -->
-              <td
+              <!-- <td
                 v-text="index + 1 + (search.pgno - 1) * navigation.countPerPage"
-              ></td>
-              <td
+              ></td> -->
+              <!-- <td
                 @mouseover="changeCursor"
                 @mouseout="restoreCursor"
                 v-on:click="detail(article.articleNo)"
@@ -178,7 +178,7 @@ function restoreCursor() {
               <td v-text="article.userName"></td>
               <td v-text="article.hit"></td>
               <td v-text="article.recommendation"></td>
-              <td>{{ article.date }}</td>
+              <td>{{ article.date }}</td> -->
             </tr>
           </tbody>
         </table>

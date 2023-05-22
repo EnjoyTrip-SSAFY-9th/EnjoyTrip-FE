@@ -32,13 +32,16 @@ const commentStore = {
       await getCommentList(
         articleNo,
         ({ data }) => {
-            if(data.message == "success"){
-                commit("SET_COMMENTS", data.list);
-            }
+          if (data.message == "success") {
+            commit("SET_COMMENTS", data.list);
+          }
           console.log("3. getComments data >> ", data);
         },
         async (error) => {
-          console.log("getcomments() error code [] ::: ", error.response.status);
+          console.log(
+            "getcomments() error code [] ::: ",
+            error.response.status
+          );
         }
       );
     },
@@ -50,7 +53,7 @@ const commentStore = {
       await writeComment(
         comment,
         async ({ data }) => {
-            await dispatch("getComments", comment.articleNo);
+          await dispatch("getComments", comment.articleNo);
         },
         async (error) => {
           console.log(
@@ -70,8 +73,8 @@ const commentStore = {
       await modifyComment(
         comment,
         async ({ data }) => {
-            console.log(data);
-            await dispatch("getComments", comment.articleNo);
+          console.log(data);
+          await dispatch("getComments", comment.articleNo);
         },
         async (error) => {
           console.log(
@@ -91,7 +94,7 @@ const commentStore = {
       await deleteComment(
         param,
         async ({ data }) => {
-            await dispatch("getComments", param.articleNo); // 삭제 후 댓글 목록 다시 불러옴
+          await dispatch("getComments", param.articleNo); // 삭제 후 댓글 목록 다시 불러옴
         },
         async (error) => {
           console.log(

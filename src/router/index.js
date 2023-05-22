@@ -38,6 +38,9 @@ import UserList from "../examples/admin/UserList.vue";
 import store from "@/stores/store";
 import Trip from "../examples/trip/Trip.vue";
 import MyTrip from "../examples/mytrip/MyTrip.vue";
+import HotPlaceView from "../views/HotPlace/HotPlaceView.vue";
+import HotPlaceList from "../examples/hotplace/HotPlaceList.vue";
+import HotPlaceWrite from "../examples/hotplace/HotPlaceWrite.vue";
 
 const onlyAuthUser = async (to, from, next) => {
   const checkUserInfo = store.getters["userStore/checkUserInfo"];
@@ -68,6 +71,16 @@ const getBoards = async (to, from, next) => {
     word: store.state.boardStore.word,
   };
   await store.dispatch("boardStore/getBoards", { search });
+  next();
+};
+
+const getHotPlaces = async (to, from, next) => {
+  const search = {
+    pgno: store.state.hotplaceStore.pgno,
+    key: store.state.hotplaceStore.key,
+    word: store.state.hotplaceStore.word,
+  };
+  await store.dispatch("hotplaceStore/gethotplaces", { search });
   next();
 };
 
@@ -276,6 +289,38 @@ const router = createRouter({
       path: "/mytrip",
       name: "mytrip",
       component: MyTrip,
+    },
+    {
+      path: "/hotplace",
+      name: "hotplace",
+      component: HotPlaceView,
+      redirect: "/hotplace/list",
+      children: [
+        {
+          path: "list",
+          name: "list",
+          beforeEnter: getHotPlaces,
+          component: HotPlaceList,
+        },
+        // {
+        //   path: "detail",
+        //   name: "detail",
+        //   beforeEnter: onlyAuthUser,
+        //   component: HotPlaceDetail,
+        // },
+        {
+          path: "write",
+          name: "write",
+          beforeEnter: onlyAuthUser,
+          component: HotPlaceWrite,
+        },
+        // {
+        //   path: "update",
+        //   name: "update",
+        //   beforeEnter: onlyAuthUser,
+        //   component: hotplaceUpdate,
+        // },
+      ],
     },
   ],
 });

@@ -1,35 +1,30 @@
 // import jwtDecode from "jwt-decode";
 import router from "@/router";
 import {
-  getBoardList,
-  showBoardDetail,
-  writeBoard,
-  modifyBoard,
-  deleteBoard,
-  recommendBoard,
-  decreaseCommentCnt,
-} from "@/api/board";
+  gethotplaceList,
+  showhotplaceDetail,
+  writehotplace,
+  modifyhotplace,
+  deletehotplace,
+  recommendhotplace,
+} from "@/api/hotplace";
 // import http from "@/api/http.js";
-const boardStore = {
+const hotplaceStore = {
   namespaced: true,
   state: {
-    type: "notice",
     pgno: "1",
     key: "",
     word: "",
-    boards: null,
-    board: null,
+    hotplaces: null,
+    hotplace: null,
     navigation: null,
   },
   getters: {
-    checkBoards: function (state) {
-      return state.boards;
+    checkhotplaces: function (state) {
+      return state.hotplaces;
     },
   },
   mutations: {
-    SET_TYPE: (state, type) => {
-      state.type = type;
-    },
     SET_PGNO: (state, pgno) => {
       state.pgno = pgno;
     },
@@ -39,58 +34,63 @@ const boardStore = {
     SET_WORD: (state, word) => {
       state.word = word;
     },
-    SET_BOARDS: (state, boards) => {
-      state.boards = boards;
+    SET_HOTPLACES: (state, hotplaces) => {
+      state.hotplaces = hotplaces;
     },
-    SET_BOARD: (state, board) => {
-      state.board = board;
+    SET_HOTPLACE: (state, hotplace) => {
+      state.hotplace = hotplace;
     },
     SET_NAVIGATION: (state, navigation) => {
       state.navigation = navigation;
     },
   },
   actions: {
-    async getBoards({ commit }, { search }) {
+    async gethotplaces({ commit }, { search }) {
       console.log(search);
-      await getBoardList(
+      await gethotplaceList(
         { search },
         ({ data }) => {
-          commit("SET_TYPE", data.type); // 공지사항인지 일반 게시글인지
           commit("SET_PGNO", data.pgno);
           commit("SET_KEY", data.key);
           commit("SET_WORD", data.word);
-          commit("SET_BOARDS", data.list);
+          commit("SET_HOTPLACES", data.list);
           commit("SET_NAVIGATION", data.navigation);
           console.log("3. getUsersInfo data >> ", data);
         },
         async (error) => {
-          console.log("getboards() error code [] ::: ", error.response.status);
+          console.log(
+            "gethotplaces() error code [] ::: ",
+            error.response.status
+          );
         }
       );
     },
-    async getBoard({ commit }, articleNo) {
-      console.log(articleNo);
-      await showBoardDetail(
-        articleNo,
+    async gethotplace({ commit }, hotplaceNo) {
+      console.log(hotplaceNo);
+      await showhotplaceDetail(
+        hotplaceNo,
         ({ data }) => {
-          commit("SET_BOARD", data.board);
-          console.log("3. getBoard data >> ", data);
+          commit("SET_HOTPLACE", data.hotplace);
+          console.log("3. gethotplace data >> ", data);
         },
         async (error) => {
-          console.log("getboards() error code [] ::: ", error.response.status);
+          console.log(
+            "gethotplaces() error code [] ::: ",
+            error.response.status
+          );
         }
       );
     },
-    async write({ commit, dispatch }, board) {
+    async write({ commit, dispatch }, hotplace) {
       // let decodeToken = jwtDecode(token);
       // console.log("회원정보수정중2");
       // console.log("5. modifyUserInfo() decodeToken :: ", decodeToken);
-      console.log(board);
-      await writeBoard(
-        board,
+      console.log(hotplace);
+      await writehotplace(
+        hotplace,
         async ({ data }) => {
           if (data.message === "success") {
-            await dispatch("getBoards");
+            await dispatch("gethotplaces");
             // commit("SET_USER_INFO", data.userInfo);
             // console.log("3. getUserInfo data >> ", data);
           } else {
@@ -99,7 +99,7 @@ const boardStore = {
         },
         async (error) => {
           console.log(
-            "writeBoard() error code [토큰 만료되어 사용 불가능.] ::: ",
+            "writehotplace() error code [토큰 만료되어 사용 불가능.] ::: ",
             error.response.status
           );
           //   commit("SET_IS_VALID_TOKEN", false);
@@ -107,16 +107,16 @@ const boardStore = {
         }
       );
     },
-    async modify({ commit, dispatch }, board) {
+    async modify({ commit, dispatch }, hotplace) {
       // let decodeToken = jwtDecode(token);
       // console.log("회원정보수정중2");
       // console.log("5. modifyUserInfo() decodeToken :: ", decodeToken);
-      console.log(board);
-      await modifyBoard(
-        board,
+      console.log(hotplace);
+      await modifyhotplace(
+        hotplace,
         ({ data }) => {
           if (data.message === "success") {
-            commit("SET_BOARD", data.board);
+            commit("SET_hotplace", data.hotplace);
             // console.log("3. getUserInfo data >> ", data);
           } else {
             console.log("유저 정보 없음!!!!");
@@ -124,7 +124,7 @@ const boardStore = {
         },
         async (error) => {
           console.log(
-            "modifyBoard() error code [토큰 만료되어 사용 불가능.] ::: ",
+            "modifyhotplace() error code [토큰 만료되어 사용 불가능.] ::: ",
             error.response.status
           );
           //   commit("SET_IS_VALID_TOKEN", false);
@@ -132,24 +132,24 @@ const boardStore = {
         }
       );
     },
-    async deleteB({ state, commit, dispatch }, articleNo) {
+    async deleteB({ state, commit, dispatch }, hotplaceNo) {
       // let decodeToken = jwtDecode(token);
       // console.log("회원정보수정중2");
       // console.log("5. modifyUserInfo() decodeToken :: ", decodeToken);
-      console.log(articleNo);
-      await deleteBoard(
-        articleNo,
+      console.log(hotplaceNo);
+      await deletehotplace(
+        hotplaceNo,
         async ({ data }) => {
           console.log(data);
           if (data.message === "success") {
-            commit("SET_BOARD", null);
+            commit("SET_hotplace", null);
             const search = {
               type: state.type,
               pgno: state.pgno,
               key: state.key,
               word: state.word,
             };
-            await dispatch("getBoards", { search }); // 삭제 후 게시글 목록으로 이동
+            await dispatch("gethotplaces", { search }); // 삭제 후 게시글 목록으로 이동
           } else {
             console.log("유저 정보 없음!!!!");
           }
@@ -157,7 +157,7 @@ const boardStore = {
         async (error) => {
           console.log(error);
           console.log(
-            "delete Board() error code [] ::: "
+            "delete hotplace() error code [] ::: "
             // error.response.status
           );
         }
@@ -165,31 +165,15 @@ const boardStore = {
     },
     async recommend({ commit, dispatch }, { param }) {
       console.log(param);
-      await recommendBoard(
+      await recommendhotplace(
         { param },
         async ({ data }) => {
-          await await dispatch("getBoard", param.articleNo); // 게시글 다시 불러오기
-          console.log("recommend Board>> ", param);
+          await await dispatch("gethotplace", param.hotplaceNo); // 게시글 다시 불러오기
+          console.log("recommend hotplace>> ", param);
         },
         async (error) => {
           console.log(
-            "recommend Board error code [] ::: ",
-            error.response.status
-          );
-        }
-      );
-    },
-    async decreaseComments({ commit, dispatch }, articleNo) {
-      console.log(articleNo);
-      await decreaseCommentCnt(
-        articleNo,
-        async ({ data }) => {
-          await dispatch("getBoard", articleNo); // 게시글 다시 불러오기
-          console.log("decrease comment >> ", articleNo);
-        },
-        async (error) => {
-          console.log(
-            "decrease comment error code [] ::: ",
+            "recommend hotplace error code [] ::: ",
             error.response.status
           );
         }
@@ -198,4 +182,4 @@ const boardStore = {
   },
 };
 
-export default boardStore;
+export default hotplaceStore;
