@@ -137,6 +137,14 @@ async function signIn() {
                   <div class="error-message">
                     {{ error.message }}
                   </div>
+                  <div class="offset-7">
+                    <router-link
+                      to="/find/password"
+                      class="text-success text-gradient font-weight-bold"
+                      >비밀번호 찾기</router-link
+                    >
+                  </div>
+
                   <div class="text-center">
                     <MaterialButton
                       class="my-4 mb-2"

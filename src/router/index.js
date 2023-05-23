@@ -28,6 +28,7 @@ import BoardList from "../examples/Board/BoardList.vue";
 import BoardDetail from "../examples/Board/BoardDetail.vue";
 import BoardWrite from "../examples/Board/BoardWrite.vue";
 import BoardUpdate from "../examples/Board/BoardUpdate.vue";
+
 import MyPage from "../views/MyPage/MyPage.vue";
 import UserInfo from "../examples/UserInfo/UserInfo.vue";
 import ModifyUserInfo from "../examples/UserInfo/ModifyUserInfo.vue";
@@ -41,6 +42,7 @@ import MyTrip from "../examples/mytrip/MyTrip.vue";
 import HotPlaceView from "../views/HotPlace/HotPlaceView.vue";
 import HotPlaceList from "../examples/hotplace/HotPlaceList.vue";
 import HotPlaceWrite from "../examples/hotplace/HotPlaceWrite.vue";
+import FindPWD from "../examples/signIn/FindPWD.vue";
 
 const onlyAuthUser = async (to, from, next) => {
   const checkUserInfo = store.getters["userStore/checkUserInfo"];
@@ -75,10 +77,15 @@ const getBoards = async (to, from, next) => {
 };
 
 const getHotPlaces = async (to, from, next) => {
+  // const search = {
+  //   pgno: store.state.hotplaceStore.pgno,
+  //   key: store.state.hotplaceStore.key,
+  //   word: store.state.hotplaceStore.word,
+  // };
   const search = {
-    pgno: store.state.hotplaceStore.pgno,
-    key: store.state.hotplaceStore.key,
-    word: store.state.hotplaceStore.word,
+    pgno: "1",
+    key: "",
+    word: "",
   };
   await store.dispatch("hotplaceStore/gethotplaces", { search });
   next();
@@ -91,6 +98,11 @@ const router = createRouter({
       path: "/",
       name: "presentation",
       component: PresentationView,
+    },
+    {
+      path: "/find/password",
+      name: "findpassword",
+      component: FindPWD,
     },
     {
       path: "/pages/landing-pages/about-us",
@@ -215,25 +227,21 @@ const router = createRouter({
       children: [
         {
           path: "list",
-          name: "list",
           beforeEnter: getBoards,
           component: BoardList,
         },
         {
           path: "detail",
-          name: "detail",
           beforeEnter: onlyAuthUser,
           component: BoardDetail,
         },
         {
           path: "write",
-          name: "write",
           beforeEnter: onlyAuthUser,
           component: BoardWrite,
         },
         {
           path: "update",
-          name: "update",
           beforeEnter: onlyAuthUser,
           component: BoardUpdate,
         },
@@ -246,23 +254,23 @@ const router = createRouter({
       redirect: "/mypage/info",
       children: [
         {
+          beforeEnter: onlyAuthUser,
           path: "info",
-          name: "info",
           component: UserInfo,
         },
         {
+          beforeEnter: onlyAuthUser,
           path: "modify",
-          name: "modify",
           component: ModifyUserInfo,
         },
         {
+          beforeEnter: onlyAuthUser,
           path: "change/password",
-          name: "change-password",
           component: ChangePassword,
         },
         {
+          beforeEnter: onlyAuthUser,
           path: "delete",
-          name: "delete",
           component: DeleteUserInfo,
         },
       ],
@@ -274,6 +282,7 @@ const router = createRouter({
       redirect: "/admin/users",
       children: [
         {
+          beforeEnter: onlyAuthUser,
           path: "users",
           name: "users",
           component: UserList,
@@ -293,12 +302,12 @@ const router = createRouter({
     {
       path: "/hotplace",
       name: "hotplace",
+      beforeEnter: onlyAuthUser,
       component: HotPlaceView,
       redirect: "/hotplace/list",
       children: [
         {
           path: "list",
-          name: "list",
           beforeEnter: getHotPlaces,
           component: HotPlaceList,
         },
@@ -310,7 +319,6 @@ const router = createRouter({
         // },
         {
           path: "write",
-          name: "write",
           beforeEnter: onlyAuthUser,
           component: HotPlaceWrite,
         },

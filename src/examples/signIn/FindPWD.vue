@@ -20,8 +20,7 @@ const confirm = reactive({
 });
 //사용자
 const user = reactive({
-  id: store.state.userStore.userInfo.id,
-  password: "",
+  id: "",
 });
 const success = reactive({
   password: "",
@@ -33,9 +32,8 @@ const error = reactive({
 //에러 메세지
 const errorMSG = {
   password: {
-    length: "비밀번호는 4자 이상 20자 미만이어야 합니다.",
+    length: "아이디는 4자 이상 20자 미만이어야 합니다.",
     type: "비밀번호는 영어, 숫자, 특수문자만 사용 가능합니다.",
-    diff: "비밀번호가 일치하지 않습니다.",
   },
 };
 
@@ -74,33 +72,34 @@ function updateData(key) {
   koreanCheck(key);
 }
 
-//유효 검사
-function checkValid() {
-  if (success.password == "success" && error.password == "") return true;
-  error.password = "diff";
-  return false;
-}
+// //유효 검사
+// function checkValid() {
+//   if (success.password == "success" && error.password == "") return true;
+//   error.password = "diff";
+//   return false;
+// }
 //비밀번호 변경
-async function changePassword() {
-  if (!checkValid()) {
-    return;
-  }
-  http.put(`/user/password`, user).then(({ data }) => {
+async function findPassword() {
+  http.get(`/user/find/password/${user.id}`).then(({ data }) => {
     // 비밀번호 변경
     // console.log(" -> " + data);
-    toast.success("비밀번호 변경 완료", {
-      autoClose: 3000,
-    });
-    router.push({ name: "mypage" });
+    toast.success(
+      "회원님의 아이디에 해당하는 이메일로 비밀번호 안내 메일을 드렸습니다.",
+      {
+        autoClose: 3000,
+      }
+    );
+    router.push("/pages/landing-pages/basic"); // 로그인 페이지로 돌아가기
   });
 }
 </script>
 
 <template>
   <section>
-    <div class="container mt-3">
+    <div class="m-5 p-5"></div>
+    <div class="container mt-5">
       <div class="col col-lg-3 offset-lg-3">
-        <h3>비밀번호 변경</h3>
+        <h3>비밀번호 찾기</h3>
       </div>
       <div class="row justify-content-center">
         <div
@@ -116,12 +115,12 @@ async function changePassword() {
               > -->
             <tbody>
               <tr>
-                <td>새 비밀번호</td>
+                <td>아이디</td>
                 <td>
                   <input
-                    type="password"
-                    v-model="user.password"
-                    v-on:keyup="updateData('password')"
+                    type="text"
+                    v-model="user.id"
+                    v-on:keyup="updateData('id')"
                   />
                 </td>
               </tr>
@@ -133,47 +132,6 @@ async function changePassword() {
                   </span>
                 </td>
               </tr>
-              <tr>
-                <td>새 비밀번호(확인)</td>
-                <td>
-                  <input
-                    type="password"
-                    v-model="confirm.password"
-                    v-on:keyup="isSame()"
-                  />
-                </td>
-              </tr>
-              <tr v-if="error.password != ''" class="error-message">
-                <td></td>
-                <td>
-                  <span>
-                    {{ errorMSG.password[error.password] }}
-                  </span>
-                </td>
-              </tr>
-              <tr v-if="success.password == 'success'" class="success-message">
-                <td></td>
-                <td>
-                  <span> 비밀번호가 일치합니다. </span>
-                </td>
-              </tr>
-              <!-- <tr>
-                  <td>비밀번호</td>
-                  <td>
-                    <div class="row justify-content-center">
-                      <div class="col col-lg-5">
-                        <MaterialButton
-                          class=""
-                          variant="gradient"
-                          color="dark"
-                          fullWidth
-                          v-on:click="changePassword()"
-                          >비밀번호 변경</MaterialButton
-                        >
-                      </div>
-                    </div>
-                  </td>
-                </tr> -->
             </tbody>
             <!-- </form> -->
           </table>
@@ -185,10 +143,15 @@ async function changePassword() {
           variant="gradient"
           color="dark"
           fullWidth
-          v-on:click="changePassword()"
-          >변경하기</MaterialButton
+          v-on:click="findPassword()"
+          >비밀번호 찾기</MaterialButton
         >
       </div>
+      <router-link
+        to="/pages/landing-pages/basic"
+        class="text-success text-gradient font-weight-bold"
+        >로그인 페이지로 돌아가기</router-link
+      >
     </div>
   </section>
 </template>

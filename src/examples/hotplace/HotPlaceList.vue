@@ -5,11 +5,12 @@ import MaterialButton from "@/components/MaterialButton.vue";
 // import MaterialSwitch from "@/components/MaterialSwitch.vue";
 import { computed } from "vue";
 import { useStore } from "vuex";
+import HotPlaceDetail from "./HotPlaceDetail.vue";
 import http from "@/api/http.js";
 
 const router = useRouter();
 const store = useStore();
-
+const backend_base_url = import.meta.env.VITE_BACKEND_BASE_URL;
 //검색에 필요한 pgno, key, word
 const search = reactive({
   pgno: "1",
@@ -21,13 +22,12 @@ const search = reactive({
 // const map = ref("");
 const navigation = computed(() => store.state.hotplaceStore.navigation);
 const articles = computed(() => store.state.hotplaceStore.hotplaces);
-
 // const showTime = computed(() => map.users.user);
 // getUsers();
 // //회원 목록 가져오는 함수
 // async function getUsers() {
 //   console.log(search);
-//   await http.get(`/admin/users`, search).then(({ data }) => {
+//   await http.get(/admin/users, search).then(({ data }) => {
 //     map = data;
 //     console.log(map.navigation.navigator);
 //   });
@@ -71,17 +71,25 @@ async function pageClick(pgno, key) {
 function writeHotPlace() {
   router.push("/hotplace/write");
 }
-
-//마우스 커서 바꾸기
-function changeCursor() {
-  document.body.style.cursor = "pointer";
+//핫플 글 삭제
+async function deleteEvent(hotplaceNo) {
+  await store.dispatch("hotplaceStore/deleteH", hotplaceNo);
 }
-
-function restoreCursor() {
-  document.body.style.cursor = "auto";
+//핫플 글 추천
+async function recommendEvent(hotplaceNo) {
+  await store.dispatch("hotplaceStore/recommend", hotplaceNo);
 }
 </script>
+
 <template>
+  <!-- <img
+    :src="
+      'http://localhost:80/resources/upload/' +
+      article.saveFolder +
+      '/' +
+      article.saveFile
+    "
+  /> -->
   <div class="container" data-aos="fade-up">
     <div class="row no-gutters" style="background-color: white">
       <div class="p-5 text-center">
@@ -90,11 +98,11 @@ function restoreCursor() {
           <div class="col-md-2 m-0" v-if="store.state.userStore.isLogin">
             <button
               id="btn-search"
-              class="btn btn-success"
+              class="btn btn-primary"
               type="button"
               v-on:click="writeHotPlace"
             >
-              글쓰기
+              등록
             </button>
           </div>
           <div class="col-md-3"></div>
@@ -112,7 +120,7 @@ function restoreCursor() {
                 aria-label="검색조건"
               >
                 <option selected>검색조건</option>
-                <option value="title">제목</option>
+                <option value="title">장소</option>
                 <option value="username">작성자</option>
                 <option value="content">내용</option>
               </select>
@@ -130,7 +138,7 @@ function restoreCursor() {
                 />
                 <button
                   id="btn-search"
-                  class="btn btn-success"
+                  class="btn btn-primary"
                   type="button"
                   v-on:click="searchHotPlace()"
                 >
@@ -140,48 +148,22 @@ function restoreCursor() {
             </form>
           </div>
         </div>
-        <table class="table table-hover w-75 m-auto mb-3">
-          <!-- <colgroup>
-            <col width="10%" />
-            <col width="50%" />
-            <col width="10%" />
-            <col width="10%" />
-            <col width="10%" />
-            <col width="10%" />
-          </colgroup> -->
-          <thead class="table-success">
-            <tr>
-              <!-- <th>글번호</th>
-              <th>제목</th>
-              <th>작성자</th>
-              <th>조회수</th>
-              <th>추천수</th>
-              <th>작성일</th> -->
-              <th>핫플레이스</th>
-            </tr>
-          </thead>
-          <tbody id="articleinfo">
-            <tr v-for="(article, index) in articles" :key="article.hotplaceNo">
-              <td></td>
-              <!-- <td v-text="index + 1"></td> -->
-              <!-- <td
-                v-text="index + 1 + (search.pgno - 1) * navigation.countPerPage"
-              ></td> -->
-              <!-- <td
-                @mouseover="changeCursor"
-                @mouseout="restoreCursor"
-                v-on:click="detail(article.articleNo)"
-              >
-                <div class="d-inline">{{ article.subject }}&nbsp;</div>
-                <div class="d-inline text-danger">[{{ article.comment }}]</div>
-              </td>
-              <td v-text="article.userName"></td>
-              <td v-text="article.hit"></td>
-              <td v-text="article.recommendation"></td>
-              <td>{{ article.date }}</td> -->
-            </tr>
-          </tbody>
-        </table>
+        <hr class="border border-dark" />
+        <div class="container">
+          <div class="row">
+            <HotPlaceDetail
+              v-for="(article, index) in articles"
+              :key="article.commentNo"
+              :article="article"
+              :index="index"
+              :backend_base_url="backend_base_url"
+              :user-id="store.state.userStore.userInfo.id"
+              @delete-event="deleteEvent"
+              @recommend-event="recommendEvent"
+            ></HotPlaceDetail>
+          </div>
+        </div>
+        <hr class="border border-dark m-0" />
       </div>
       <ul class="pagination justify-content-center">
         <li class="page-item">
@@ -204,7 +186,7 @@ function restoreCursor() {
         >
           <a
             href="#"
-            class="page-link bg-success"
+            class="page-link bg-danger"
             v-on:click="pageClick(page, '')"
             v-if="page == navigation.currentPage"
             >{{ page }}</a
@@ -254,3 +236,9 @@ function restoreCursor() {
     <input type="hidden" id="userid" name="userId" value="" />
   </form> -->
 </template>
+<style scoped>
+img {
+  width: 300px;
+  height: 300px;
+}
+</style>

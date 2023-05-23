@@ -197,14 +197,18 @@ async function recommend() {
               >
             </div>
             <div class="d-inline">
-              <div
-                class="d-inline"
-                @click="recommend"
-                @mouseover="changeCursor"
-                @mouseout="restoreCursor"
-              >
-                <img src="@/assets/img/heart6.png" class="w-2 mb-2" />
-                <h6 class="d-inline px-1 font-weight-light">
+              <div class="d-inline">
+                <!-- <img src="@/assets/img/heart6.png" class="w-2 mb-2" /> -->
+                <v-btn
+                  size="middle"
+                  color="red-lighten-1"
+                  variant="text"
+                  icon="mdi-heart"
+                  @click="recommend"
+                  @mouseover="changeCursor"
+                  @mouseout="restoreCursor"
+                ></v-btn>
+                <h6 class="d-inline font-weight-light">
                   좋아요&nbsp;{{ article.recommendation }}
                 </h6>
               </div>

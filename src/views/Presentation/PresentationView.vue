@@ -57,6 +57,7 @@ onUnmounted(() => {
             >
               Wanderlustify
             </h1>
+            <h3 class="text-white">좋아하는 여행지를 찾다</h3>
             <p class="lead text-white px-5 mt-3" :style="{ fontWeight: '500' }">
               이야기의 장소를 찾아, 새로운 이야기를 써나가는 여행을 함께
               합시다.<br />

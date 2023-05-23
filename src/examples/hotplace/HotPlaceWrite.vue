@@ -10,30 +10,54 @@ import http from "@/api/http.js";
 const router = useRouter();
 const store = useStore();
 
-//검색에 필요한 pgno, key, word
+// 나중에 지역별 관광지->핫플 등록으로 넘어오는 경우 데이터 가져오는 작업 필요
 const article = reactive({
-  subject: "",
+  title: "",
   content: "",
-  isnotice: 0,
+  address: "",
   userId: store.state.userStore.userInfo.id,
 });
-function setType() {
-  if (article.isnotice == 0) article.isnotice = 1;
-  else article.isnotice = 0;
+const click = reactive({
+  show: false,
+});
+const image = reactive({
+  file: null,
+  preview: null,
+});
+//이미지 파일 저장
+function onInputImg(e) {
+  image.file = e.target.files[0];
+  image.preview = URL.createObjectURL(image.file);
+  console.log(image);
 }
-function updateSubject(e) {
-  article.subject = e.target.value;
+
+function updateTitle(e) {
+  article.title = e.target.value;
   console.log(article);
 }
 function updateContent(e) {
   article.content = e.target.value;
   console.log(article);
 }
+function updateAddress(e) {
+  article.address = e.target.value;
+  console.log(article);
+}
 //글쓰기 완료
 async function write() {
   console.log(article);
-  await store.dispatch("boardStore/write", article);
-  router.push("/board/list");
+  await store.dispatch("hotplaceStore/write", article);
+  const formData = new FormData();
+  formData.append("upfile", image.file);
+  // formData.append('hotplaceDto', JSON.stringify(article));
+  formData.append("hotplaceNo", store.state.hotplaceStore.hotplace.hotplaceNo);
+  console.log(store.state.hotplaceStore.hotplace.hotplaceNo);
+  await store.dispatch("hotplaceStore/writeFile", formData);
+  router.push("/hotplace");
+}
+//등록 취소
+function handleReset() {
+  router.push("/hotplace");
 }
 </script>
 
@@ -43,77 +67,94 @@ async function write() {
     class="about"
     style="background-color: #f5f9fc; padding-bottom: 60px"
   >
-    <div class="container" data-aos="fade-up">
+    <div class="m-5"></div>
+    <div class="container p-5" data-aos="fade-up">
       <div class="row no-gutters" style="background-color: white">
         <div class="p-5">
           <!-- ===== update start ===== -->
           <div class="modal-header mb-3">
             <h4 class="modal-title">
-              <label class="fw-bold border-bottom border-warning border-5"
-                >글 작성</label
-              >
+              <h3 class="fw-bold border-bottom border-primary border-5">
+                나만의 핫플레이스
+              </h3>
             </h4>
           </div>
-          <div>
-            <form
-              role="form"
-              id="contact-form"
-              method="post"
-              autocomplete="off"
-              @submit.prevent
-            >
-              <div class="mb-3">
-                <label for="id" class="form-label">작성자:</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="id"
-                  :value="article.userId"
-                  name="userId"
-                  readonly="readonly"
-                />
-              </div>
-              <div class="mb-3" v-if="store.state.userStore.userInfo.isAdmin">
-                <input type="checkbox" name="isnotice" @click="setType" />
-                <label for="isnotice">공지</label>
-              </div>
-              <div class="mb-3">
-                <label for="subject" class="form-label">제목:</label>
-                <!-- <input type="text" class="form-control" id="subject" name="subject" :value="article.sub
-                " @input="updateSubject" /> -->
-                <input
-                  type="text"
-                  class="form-control"
-                  name="subject"
-                  :value="article.subject"
-                  v-on:keyup="updateSubject"
-                />
-              </div>
-              <div class="mb-3">
-                <label for="content" class="form-label">내용:</label>
-                <textarea
-                  class="form-control"
-                  rows="10"
-                  name="content"
+          <div class="row">
+            <div class="col-lg-6">
+              <form @submit.prevent="submit">
+                <v-text-field
+                  :value="article.title"
+                  :counter="50"
+                  @input="updateTitle"
+                  label="제목"
+                ></v-text-field>
+
+                <v-text-field
+                  :value="article.address"
+                  :counter="100"
+                  @input="updateAddress"
+                  label="주소"
+                ></v-text-field>
+
+                <v-textarea
                   :value="article.content"
                   @input="updateContent"
-                ></textarea>
-              </div>
-
-              <div class="modal-footer">
-                <button
+                  label="내용"
+                ></v-textarea>
+                <v-file-input
+                  label="사진 등록"
+                  @change="onInputImg"
+                ></v-file-input>
+                <v-btn
+                  class="me-4"
                   type="button"
-                  id="btn-register"
-                  class="btn btn-outline-primary btn-sm me-1"
-                  v-on:click="write"
+                  color="pink-darken-1"
+                  @click="write"
                 >
-                  쓰기
-                </button>
-                <!-- <button type="button" id="btn-list" class="btn btn-outline-dark btn-sm">
-              목록으로이동
-            </button> -->
-              </div>
-            </form>
+                  등록하기
+                </v-btn>
+
+                <v-btn color="red-lighten-1" @click="handleReset"> 취소 </v-btn>
+              </form>
+            </div>
+            <div class="col-lg-6">
+              <h4 class="offset-lg-3">미리보기</h4>
+              <v-card class="mx-auto" max-width="344">
+                <v-img
+                  :src="image.preview"
+                  height="200px"
+                  cover
+                  @click="test"
+                ></v-img>
+
+                <v-card-title> {{ article.title }} </v-card-title>
+
+                <v-card-subtitle> {{ article.address }} </v-card-subtitle>
+
+                <v-card-actions>
+                  <v-btn color="orange-lighten-2" variant="text">
+                    {{ store.state.userStore.userInfo.name }} 님
+                  </v-btn>
+
+                  <v-spacer></v-spacer>
+
+                  <v-btn
+                    :icon="click.show ? 'mdi-chevron-up' : 'mdi-chevron-down'"
+                    @click="click.show = !click.show"
+                  ></v-btn>
+                </v-card-actions>
+
+                <v-expand-transition>
+                  <div v-show="click.show">
+                    <v-divider></v-divider>
+
+                    <v-card-text>
+                      {{ article.content }}
+                    </v-card-text>
+                  </div>
+                </v-expand-transition>
+              </v-card>
+            </div>
           </div>
         </div>
         <!-- update end -->
