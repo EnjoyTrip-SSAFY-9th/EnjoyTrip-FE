@@ -33,7 +33,7 @@ const { data: all } = useQuery({
 });
 
 const mytripAll = computed(() => all || []);
-const enabled = computed(() => mytripAll.value.length > 0);
+const enabled = computed(() => mytripNo.value !== undefined);
 const mytripNo = computed(() => all.value?.[page.value - 1]);
 
 // 공공데이터 서비스 키
@@ -61,9 +61,12 @@ async function fetchMyTrip(data) {
 }
 
 const getMyTrip = async () => {
+  console.log(mytripNo.value);
   const data = await http.get(
     `/attraction/getMyTrip/${userInfo.value.id}/${mytripNo.value}`
   );
+  // console.log(data.data);
+  // return data.data;
   const trips = await fetchMyTrip(data.data);
   return Promise.all(trips);
 };
@@ -71,7 +74,7 @@ const getMyTrip = async () => {
 const { data: list } = useQuery({
   queryKey: ["mytrip", userInfo.value.id, mytripNo],
   queryFn: getMyTrip,
-  enabled: mytripNo.value !== undefined,
+  enabled,
 });
 
 const color = [
