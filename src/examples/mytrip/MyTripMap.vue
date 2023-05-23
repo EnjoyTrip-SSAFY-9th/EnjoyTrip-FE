@@ -25,35 +25,31 @@ const list = computed(() => {
 
 watch(list, (newValue) => {
   if (newValue.length > 0) {
-    // makeList(newValue);
+    markMyTrip(newValue);
   }
 });
 
-function markMyTrip(tripsPromise) {
-  Promise.all(tripsPromise)
-    .then((trips) => {
-      const points = trips.map((trip) => ({
-        latlng: new window.kakao.maps.LatLng(trip.latitude, trip.longitude),
-        title: trip.title,
-        addr1: trip.addr1,
-        firstimage: trip.first_image,
-      }));
+function markMyTrip(trips) {
+  const points = trips.map((trip) => ({
+    latlng: new window.kakao.maps.LatLng(trip.latitude, trip.longitude),
+    title: trip.title,
+    addr1: trip.addr1,
+    firstimage: trip.first_image,
+  }));
 
-      // 지도에 표시할 선을 생성합니다
-      let polyline = new window.kakao.maps.Polyline({
-        path: points.map((p) => p.latlng), // 선을 구성하는 좌표배열 입니다
-        strokeWeight: 5, // 선의 두께 입니다
-        strokeColor: "#FFAE00", // 선의 색깔입니다
-        strokeOpacity: 0.7, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
-        strokeStyle: "solid", // 선의 스타일입니다
-      });
+  // 지도에 표시할 선을 생성합니다
+  let polyline = new window.kakao.maps.Polyline({
+    path: points.map((p) => p.latlng), // 선을 구성하는 좌표배열 입니다
+    strokeWeight: 5, // 선의 두께 입니다
+    strokeColor: "#FFAE00", // 선의 색깔입니다
+    strokeOpacity: 0.7, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+    strokeStyle: "solid", // 선의 스타일입니다
+  });
 
-      // 지도에 선을 표시합니다
-      polyline.setMap(map);
+  // 지도에 선을 표시합니다
+  polyline.setMap(map);
 
-      displayMarker(points);
-    })
-    .catch((error) => console.error(error));
+  displayMarker(points);
 }
 
 function setMarkers(map) {
@@ -77,7 +73,6 @@ function displayMarker(positions) {
     // 마커 이미지를 생성합니다
     let markerImage = new window.kakao.maps.MarkerImage(imageSrc, imageSize);
 
-    console.log(positions);
     // 마커를 생성합니다
     const marker = new window.kakao.maps.Marker({
       map: map, // 마커를 표시할 지도
@@ -107,36 +102,6 @@ function setBounds(bounds) {
   map.setBounds(bounds);
 }
 
-async function getMyTrip() {
-  // const response = await fetch("/attraction/getMyTrip");
-  // const data = await response.json();
-  const data = await http.get(`/attraction/getMyTrip`);
-
-  await fetchMyTrip(data);
-  markMyTrip(props.list);
-}
-
-async function fetchMyTrip(data) {
-  let url = `https://apis.data.go.kr/B551011/KorService1/detailCommon1?serviceKey=${serviceKey}&MobileOS=ETC&MobileApp=AppTest&_type=json&contentTypeId=12&defaultYN=Y&firstImageYN=Y&areacodeYN=Y&catcodeYN=Y&addrinfoYN=Y&mapinfoYN=Y&overviewYN=Y&numOfRows=10&pageNo=1&contentId=`;
-
-  const trips = data.map(async (id) => {
-    const data = await (await fetch(url + id)).json();
-    const item = await data.response.body.items.item[0];
-    const trip = {
-      latitude: item.mapy,
-      longitude: item.mapx,
-      title: item.title,
-      addr1: item.addr1,
-      first_image: item.firstimage,
-    };
-
-    return trip;
-  });
-
-  emit("changeTrip", [...trips]);
-  // return [...trips];
-}
-
 const loadScript = () => {
   const script = document.createElement("script");
   script.src =
@@ -154,8 +119,6 @@ const loadMap = () => {
   };
 
   map = new window.kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
-
-  getMyTrip();
 };
 
 onMounted(() => {
