@@ -1,6 +1,8 @@
 <script setup>
 import { onMounted, ref, computed, reactive, watch } from "vue";
 import { useQuery } from "@tanstack/vue-query";
+import http from "../../api/http";
+import { useStore } from "vuex";
 
 const props = defineProps({
   list: {
@@ -10,6 +12,8 @@ const props = defineProps({
 });
 let map = null;
 let markers = [];
+const store = useStore();
+const userInfo = computed(() => store.state.userStore.userInfo);
 
 const data = computed(() => {
   return props.list;
@@ -20,6 +24,20 @@ watch(data, (newValue) => {
     makeList(newValue);
   }
 });
+
+const getMyTripMax = async () => {
+  const data = await (
+    await http.get(`/attraction/getMyTripMax/${userInfo.value.id}`)
+  ).data;
+  return data;
+};
+
+const { data: max } = useQuery({
+  queryKey: ["mytripmax", userInfo.value.id],
+  queryFn: getMyTripMax,
+  staleTime: 60000,
+});
+
 
 const loadScript = () => {
   const script = document.createElement("script");
@@ -39,6 +57,16 @@ const loadMap = () => {
 
   map = new window.kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
 };
+
+function add(contentid) {
+  // const { contentid } = dataset;
+  const data = {
+    content_id: contentid,
+    user_id: userInfo.value.id,
+    user_mytrip_no: max.value + 1,
+  };
+  http.post(`/attraction/addMyTrip`, data);
+}
 
 function displayMarker(positions) {
   setMarkers(null);
@@ -80,7 +108,7 @@ function displayMarker(positions) {
     const marker = new window.kakao.maps.Marker({
       map: map, // 마커를 표시할 지도
       position: positions[i].latlng, // 마커를 표시할 위치
-      title: positions[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+      title: positions[i].contentId, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
       image: markerImage, // 마커 이미지
     });
 
@@ -92,16 +120,21 @@ function displayMarker(positions) {
 
     markers.push(marker);
 
+    window.kakao.maps.event.addListener(marker, "click", () => {
+      console.log();
+      add(marker["Gb"]);
+    });
     window.kakao.maps.event.addListener(marker, "mouseover", () => {
       infowindow.open(map, marker);
     });
-
     window.kakao.maps.event.addListener(marker, "mouseout", () => {
       infowindow.close(map, marker);
     });
 
     window.kakao.maps.event.addListener(infowindow, "click", () => {
-      console.log("testsetsetsetset");
+      // add(this.dataset);
+      console.log("dhfihdi");
+      // infowindow.close(map, marker);
     });
 
     points.push(positions[i].latlng);
@@ -172,12 +205,6 @@ function relayout() {
   // 크기를 변경한 이후에는 반드시  map.relayout 함수를 호출해야 합니다
   // window의 resize 이벤트에 의한 크기변경은 map.relayout 함수가 자동으로 호출됩니다
   map.relayout();
-}
-
-function add(dataset) {
-  const { contentid } = dataset;
-  console.log(contentid);
-  fetch(`/attraction/addMyTrip?contentId=${contentid}`);
 }
 
 onMounted(() => {
