@@ -13,11 +13,13 @@ import {
 const hotplaceStore = {
   namespaced: true,
   state: {
+    sort: "hotplace_no",
     pgno: "1",
     key: "",
     word: "",
     hotplaces: null,
     hotplace: null,
+    hotTop3: null,
     navigation: null,
   },
   getters: {
@@ -26,6 +28,9 @@ const hotplaceStore = {
     },
   },
   mutations: {
+    SET_SORT: (state, sort) => {
+      state.sort = sort;
+    },
     SET_PGNO: (state, pgno) => {
       state.pgno = pgno;
     },
@@ -41,6 +46,9 @@ const hotplaceStore = {
     SET_HOTPLACE: (state, hotplace) => {
       state.hotplace = hotplace;
     },
+    SET_HOTTOP3: (state, hotTop3) => {
+      state.hotTop3 = hotTop3;
+    },
     SET_NAVIGATION: (state, navigation) => {
       state.navigation = navigation;
     },
@@ -51,10 +59,11 @@ const hotplaceStore = {
       await gethotplaceList(
         { search },
         ({ data }) => {
+          commit("SET_SORT", data.sort);
           commit("SET_PGNO", data.pgno);
           commit("SET_KEY", data.key);
           commit("SET_WORD", data.word);
-          // commit("SET_URLS", data.urls);
+          commit("SET_HOTTOP3", data.top3);
           commit("SET_HOTPLACES", data.list);
           commit("SET_NAVIGATION", data.navigation);
           console.log("3. getUsersInfo data >> ", data);
@@ -113,6 +122,7 @@ const hotplaceStore = {
         formData,
         async ({ data }) => {
           const search = {
+            sort: "hotplace_no",
             pgno: "1",
             key: "",
             word: "",
@@ -166,6 +176,7 @@ const hotplaceStore = {
           if (data.message === "success") {
             commit("SET_HOTPLACE", null);
             const search = {
+              sort: "hotplace_no",
               pgno: state.pgno,
               key: state.key,
               word: state.word,
@@ -190,6 +201,7 @@ const hotplaceStore = {
         hotplaceNo,
         async ({ data }) => {
           const search = {
+            sort: state.sort,
             pgno: state.pgno,
             key: state.key,
             word: state.word,

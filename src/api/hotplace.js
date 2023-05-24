@@ -6,6 +6,7 @@ async function gethotplaceList({ search }, success, fail) {
   await api
     .get(`/hotplace/`, {
       params: {
+        sort: search.sort,
         pgno: search.pgno,
         key: search.key,
         word: search.word,

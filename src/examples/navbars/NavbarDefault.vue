@@ -149,7 +149,7 @@ async function admin() {
         title="Designed and Coded by Creative Tim"
         data-placement="bottom"
       >
-        Wanderlustify
+        🛫Wanderlustify🛬
       </RouterLink>
       <RouterLink
         class="navbar-brand d-block d-md-none"

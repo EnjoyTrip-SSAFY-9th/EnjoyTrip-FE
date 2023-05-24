@@ -86,7 +86,7 @@ function restoreCursor() {
 <template>
   <div class="container" data-aos="fade-up">
     <div class="row no-gutters" style="background-color: white">
-      <div class="p-5 text-center">
+      <div class="text-center">
         <h3 class="my-5 fw-bold">여행정보공유</h3>
         <div class="row w-75 mx-auto mb-3">
           <div class="col-md-2 m-0" v-if="store.state.userStore.isLogin">
@@ -127,7 +127,7 @@ function restoreCursor() {
                   :value="search.word"
                   @input="changeWord"
                   id="word"
-                  class="form-control"
+                  class="form-control border border-dark mr-3"
                   placeholder="검색어..."
                 />
                 <button
@@ -144,8 +144,8 @@ function restoreCursor() {
         </div>
         <table class="table table-hover w-75 m-auto mb-3">
           <colgroup>
-            <col width="10%" />
-            <col width="50%" />
+            <col width="15%" />
+            <col width="45%" />
             <col width="10%" />
             <col width="10%" />
             <col width="10%" />
@@ -171,8 +171,14 @@ function restoreCursor() {
                 @mouseover="changeCursor"
                 @mouseout="restoreCursor"
                 v-on:click="detail(article.articleNo)"
+                class="text-left"
               >
-                <div class="d-inline">{{ article.subject }}&nbsp;</div>
+                <div class="d-inline">
+                  <span v-if="article.isnotice" class="font-weight-bold"
+                    >[공지]</span
+                  >
+                  {{ article.subject }}&nbsp;
+                </div>
                 <div class="d-inline text-danger">[{{ article.comment }}]</div>
               </td>
               <td v-text="article.userName"></td>

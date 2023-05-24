@@ -83,12 +83,6 @@ async function findPassword() {
   http.get(`/user/find/password/${user.id}`).then(({ data }) => {
     // 비밀번호 변경
     // console.log(" -> " + data);
-    toast.success(
-      "회원님의 아이디에 해당하는 이메일로 비밀번호 안내 메일을 드렸습니다.",
-      {
-        autoClose: 3000,
-      }
-    );
     router.push("/pages/landing-pages/basic"); // 로그인 페이지로 돌아가기
   });
 }
@@ -137,21 +131,25 @@ async function findPassword() {
           </table>
         </div>
       </div>
-      <div class="col col-lg-2 offset-lg-7 text-center">
-        <MaterialButton
-          class="my-4 mb-2"
-          variant="gradient"
-          color="dark"
-          fullWidth
-          v-on:click="findPassword()"
-          >비밀번호 찾기</MaterialButton
-        >
+      <div class="row">
+        <div class="col-lg-3 offset-3 mt-4">
+          <router-link
+            to="/pages/landing-pages/basic"
+            class="text-success text-gradient font-weight-bold"
+            >로그인 페이지로 돌아가기</router-link
+          >
+        </div>
+        <div class="col-lg-2 offset-lg-1 text-center">
+          <MaterialButton
+            class="my-4 mb-2"
+            variant="gradient"
+            color="dark"
+            fullWidth
+            v-on:click="findPassword()"
+            >비밀번호 찾기</MaterialButton
+          >
+        </div>
       </div>
-      <router-link
-        to="/pages/landing-pages/basic"
-        class="text-success text-gradient font-weight-bold"
-        >로그인 페이지로 돌아가기</router-link
-      >
     </div>
   </section>
 </template>

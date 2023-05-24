@@ -83,7 +83,7 @@ async function write() {
                 " @input="updateSubject" /> -->
                 <input
                   type="text"
-                  class="form-control"
+                  class="form-control border border-dark"
                   name="subject"
                   :value="article.subject"
                   v-on:keyup="updateSubject"
@@ -92,7 +92,7 @@ async function write() {
               <div class="mb-3">
                 <label for="content" class="form-label">내용:</label>
                 <textarea
-                  class="form-control"
+                  class="form-control border border-dark"
                   rows="10"
                   name="content"
                   :value="article.content"

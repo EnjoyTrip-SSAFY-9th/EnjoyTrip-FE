@@ -83,6 +83,7 @@ const getHotPlaces = async (to, from, next) => {
   //   word: store.state.hotplaceStore.word,
   // };
   const search = {
+    sort: "hotplace_no",
     pgno: "1",
     key: "",
     word: "",
@@ -97,6 +98,7 @@ const router = createRouter({
     {
       path: "/",
       name: "presentation",
+      beforeEnter: getHotPlaces,
       component: PresentationView,
     },
     {

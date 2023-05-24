@@ -18,10 +18,12 @@ import { toast } from "vue3-toastify";
 
 onMounted(() => {
   setMaterialInput();
+  getIDByCookie();
 });
-
 const router = useRouter();
-
+const click = reactive({
+  rememeberId: false,
+});
 const user = reactive({
   id: "",
   password: "",
@@ -31,9 +33,48 @@ const error = reactive({
 });
 
 function updateData(data, key) {
+  console.log(click);
   user[key] = data;
   console.log(user);
 }
+//쿠키에서 저장된 아이디가 있으면 가져오는 함수
+async function getIDByCookie() {
+  const cookies = document.cookie;
+  const cookieArray = cookies.split("; ");
+  console.log(cookieArray);
+  for (let i = 0; i < cookieArray.length; i++) {
+    const cookie = cookieArray[i].split("=");
+    const key = cookie[0];
+    const value = cookie[1];
+
+    if (key === "id") {
+      user.id = value;
+    }
+  }
+}
+
+//아이디를 쿠키에 저장하는 함수
+async function storeIDByCookie(id) {
+  const cookies = document.cookie;
+  const cookieArray = cookies.split("; ");
+  document.cookie = `id=${id}`;
+  // if (cookieArray.length == 0) {
+  //   document.cookie = `id=${id}`;
+  // } else {
+  //   // 쿠키 배열에서 id 키를 찾음
+  //   for (let i = 0; i < cookieArray.length; i++) {
+  //     const cookie = cookieArray[i].split("=");
+  //     const cookieKey = cookie[0];
+
+  //     if (cookieKey === "id") {
+  //       const updatedCookie = `${cookieKey}=${id}`;
+  //       document.cookie = updatedCookie; // 수정된 쿠키 값을 설정하여 업데이트
+  //       break;
+  //     }
+  //   }
+  // }
+}
+
 const store = useStore();
 async function signIn() {
   console.log(user);
@@ -58,6 +99,11 @@ async function signIn() {
       });
       // alert(store.state.userStore.userInfo.id + "님 환영합니다!");
     }
+    if (click.rememeberId) {
+      // 아이디 저장 필요함
+      await storeIDByCookie(user.id);
+      await getIDByCookie();
+    }
     router.push({ name: "presentation" }); // 메인 페이지로 이동
   } else {
     error.message = "아이디 또는 비밀번호가 잘못되었습니다.";
@@ -70,7 +116,7 @@ async function signIn() {
       class="page-header align-items-start min-vh-100"
       :style="{
         backgroundImage:
-          'url(https://images.unsplash.com/photo-1497294815431-9365093b7331?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1950&q=80)',
+          'url(https://images.unsplash.com/photo-1682936995637-51895022dcef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80)',
       }"
       loading="lazy"
     >
@@ -88,9 +134,9 @@ async function signIn() {
                   <h4
                     class="text-white font-weight-bolder text-center mt-2 mb-0"
                   >
-                    Sign in
+                    로그인
                   </h4>
-                  <div class="row mt-3">
+                  <!-- <div class="row mt-3">
                     <div class="col-2 text-center ms-auto">
                       <a class="btn btn-link px-3" href="javascript:;">
                         <i class="fa fa-facebook text-white text-lg"></i>
@@ -106,14 +152,14 @@ async function signIn() {
                         <i class="fa fa-google text-white text-lg"></i>
                       </a>
                     </div>
-                  </div>
+                  </div> -->
                 </div>
               </div>
               <div class="card-body">
                 <form role="form" class="text-start" @submit.prevent>
                   <MaterialInput
                     id="id"
-                    class="input-group-outline my-3"
+                    class="input-group-outline my-3 is-focused"
                     :label="{ text: 'id', class: 'form-label' }"
                     :user="user"
                     @updateData="updateData"
@@ -131,13 +177,13 @@ async function signIn() {
                     class="d-flex align-items-center mb-3"
                     id="rememberMe"
                     labelClass="mb-0 ms-3"
-                    checked
-                    >Remember me</MaterialSwitch
+                    @change="click.rememeberId = !click.rememeberId"
+                    >아이디 저장</MaterialSwitch
                   >
                   <div class="error-message">
                     {{ error.message }}
                   </div>
-                  <div class="offset-7">
+                  <div class="offset-lg-8">
                     <router-link
                       to="/find/password"
                       class="text-success text-gradient font-weight-bold"
@@ -152,11 +198,11 @@ async function signIn() {
                       color="success"
                       fullWidth
                       v-on:click="signIn()"
-                      >Sign in</MaterialButton
+                      >로그인</MaterialButton
                     >
                   </div>
                   <p class="mt-4 text-sm text-center">
-                    Don't have an account?
+                    계정이 없으신가요?
                     <!-- <a
                       href="#"
                       class="text-success text-gradient font-weight-bold"
@@ -164,8 +210,8 @@ async function signIn() {
                     > -->
                     <router-link
                       to="/sections/input-areas/forms"
-                      class="text-success text-gradient font-weight-bold"
-                      >Sign up</router-link
+                      class="text-success font-weight-bold"
+                      >회원가입</router-link
                     >
                   </p>
                 </form>

@@ -28,8 +28,11 @@ import logoVue from "@/assets/img/logos/vue.jpg";
 import logoAngular from "@/assets/img/logos/angular.jpg";
 import logoReact from "@/assets/img/logos/react.jpg";
 import logoSketch from "@/assets/img/logos/sketch.jpg";
-
+import HotPlaceDetail from "@/examples/hotplace/HotPlaceDetail.vue";
 //hooks
+import { computed } from "vue";
+import { useStore } from "vuex";
+const store = useStore();
 const body = document.getElementsByTagName("body")[0];
 onMounted(() => {
   body.classList.add("presentation-page");
@@ -39,6 +42,8 @@ onUnmounted(() => {
   body.classList.remove("presentation-page");
   body.classList.remove("bg-gray-200");
 });
+const backend_base_url = import.meta.env.VITE_BACKEND_BASE_URL;
+const hotTop3 = computed(() => store.state.hotplaceStore.hotTop3);
 </script>
 
 <template>
@@ -71,6 +76,20 @@ onUnmounted(() => {
 
   <div class="card card-body blur shadow-blur mx-3 mx-md-4 mt-n6">
     <PresentationInformation />
+    <div>
+      <div class="text-center">
+        <h3 class="mb-5">인기 핫플레이스 <br />TOP 3</h3>
+      </div>
+      <div class="row">
+        <HotPlaceDetail
+          v-for="(article, index) in hotTop3"
+          :key="article.commentNo"
+          :article="article"
+          :index="index"
+          :backend_base_url="backend_base_url"
+        ></HotPlaceDetail>
+      </div>
+    </div>
     <PresentationPages />
   </div>
   <DefaultFooter />
