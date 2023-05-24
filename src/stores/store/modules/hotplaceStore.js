@@ -126,7 +126,11 @@ const hotplaceStore = {
       await writehotplaceFile(
         formData,
         async ({ data }) => {
-          commit("SET_HOTPLACE", null);
+          const hotplace = {
+            title: "",
+            address: "",
+          };
+          commit("SET_HOTPLACE", hotplace);
           const search = {
             sort: "hotplace_no",
             pgno: "1",
