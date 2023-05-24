@@ -12,9 +12,9 @@ const store = useStore();
 
 // 나중에 지역별 관광지->핫플 등록으로 넘어오는 경우 데이터 가져오는 작업 필요
 const article = reactive({
-  title: "",
+  title: store.state.hotplaceStore.hotplace.title,
   content: "",
-  address: "",
+  address: store.state.hotplaceStore.hotplace.address,
   userId: store.state.userStore.userInfo.id,
 });
 const click = reactive({
@@ -56,7 +56,12 @@ async function write() {
   router.push("/hotplace");
 }
 //등록 취소
-function handleReset() {
+async function handleReset() {
+  const hotplace = {
+    title: "",
+    address: "",
+  };
+  await store.commit("hotplaceStore/SET_HOTPLACE", hotplace);
   router.push("/hotplace");
 }
 </script>
@@ -83,21 +88,21 @@ function handleReset() {
             <div class="col-lg-6">
               <form @submit.prevent="submit">
                 <v-text-field
-                  :value="article.title"
+                  :model-value="article.title"
                   :counter="50"
                   @input="updateTitle"
-                  label="제목"
+                  label="장소"
                 ></v-text-field>
 
                 <v-text-field
-                  :value="article.address"
+                  :model-value="article.address"
                   :counter="100"
                   @input="updateAddress"
                   label="주소"
                 ></v-text-field>
 
                 <v-textarea
-                  :value="article.content"
+                  :model-value="article.content"
                   @input="updateContent"
                   label="내용"
                 ></v-textarea>

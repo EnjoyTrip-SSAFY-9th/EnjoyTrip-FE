@@ -163,7 +163,7 @@ async function admin() {
         title="Designed and Coded by Creative Tim"
         data-placement="bottom"
       >
-        Wanderlustify
+        🛫Wanderlustify🛬
       </RouterLink>
 
       <button
@@ -483,6 +483,20 @@ async function admin() {
         </ul>
         <ul
           class="navbar-nav d-lg-block d-none"
+          v-if="!store.state.userStore.isLogin"
+        >
+          <li class="nav-item">
+            <a
+              :href="action.route"
+              class="btn btn-sm mb-0"
+              :class="action.color"
+              onclick="smoothToPricing('pricing-soft-ui')"
+              >{{ action.label }}</a
+            >
+          </li>
+        </ul>
+        <ul
+          class="navbar-nav d-lg-none offset-10"
           v-if="!store.state.userStore.isLogin"
         >
           <li class="nav-item">

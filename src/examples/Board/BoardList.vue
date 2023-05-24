@@ -82,6 +82,20 @@ function changeCursor() {
 function restoreCursor() {
   document.body.style.cursor = "auto";
 }
+function showTime(date) {
+  const year = date.substring(0, 4);
+  const month = date.substring(5, 7);
+  const day = date.substring(8, 10);
+  if (
+    year == store.state.boardStore.now.year &&
+    month == store.state.boardStore.now.month &&
+    day == store.state.boardStore.now.day
+  ) {
+    return date.substring(10, date.length - 3);
+  } else {
+    return date.substring(0, 10);
+  }
+}
 </script>
 <template>
   <div class="container" data-aos="fade-up">
@@ -145,8 +159,8 @@ function restoreCursor() {
         <table class="table table-hover w-75 m-auto mb-3">
           <colgroup>
             <col width="15%" />
-            <col width="45%" />
-            <col width="10%" />
+            <col width="40%" />
+            <col width="15%" />
             <col width="10%" />
             <col width="10%" />
             <col width="10%" />
@@ -184,7 +198,7 @@ function restoreCursor() {
               <td v-text="article.userName"></td>
               <td v-text="article.hit"></td>
               <td v-text="article.recommendation"></td>
-              <td>{{ article.date }}</td>
+              <td>{{ showTime(article.date) }}</td>
             </tr>
           </tbody>
         </table>
@@ -192,7 +206,7 @@ function restoreCursor() {
       <ul class="pagination justify-content-center">
         <li class="page-item">
           <a href="#" class="page-link" v-on:click="pageClick('1', 'first')"
-            >최신</a
+            >처음</a
           >
         </li>
         <li class="page-item">
@@ -241,7 +255,7 @@ function restoreCursor() {
             href="#"
             class="page-link"
             v-on:click="pageClick(navigation.totalPageCount, 'last')"
-            >마지막</a
+            >끝</a
           >
         </li>
       </ul>

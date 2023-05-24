@@ -66,6 +66,17 @@ const onlyAuthUser = async (to, from, next) => {
 };
 
 const getBoards = async (to, from, next) => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  const date = {
+    year: year,
+    month: month,
+    day: day,
+  };
+  await store.commit("boardStore/SET_NOW", date);
+  console.log(date);
   const search = {
     type: store.state.boardStore.type,
     pgno: store.state.boardStore.pgno,
