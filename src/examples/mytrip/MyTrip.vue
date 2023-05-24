@@ -42,8 +42,8 @@ const serviceKey =
 
 async function fetchMyTrip(data) {
   let url = `https://apis.data.go.kr/B551011/KorService1/detailCommon1?serviceKey=${serviceKey}&MobileOS=ETC&MobileApp=AppTest&_type=json&defaultYN=Y&firstImageYN=Y&areacodeYN=Y&catcodeYN=Y&addrinfoYN=Y&mapinfoYN=Y&overviewYN=Y&numOfRows=10&pageNo=1&contentId=`;
-  const trips = data.map(async (id) => {
-    const data = await (await fetch(url + id)).json();
+  const trips = data.map(async (el) => {
+    const data = await (await fetch(url + el.content_id)).json();
     const item = await data.response.body.items.item[0];
     const trip = {
       ...item,
@@ -52,6 +52,8 @@ async function fetchMyTrip(data) {
       title: item.title,
       addr1: item.addr1,
       first_image: item.firstimage,
+      no: el.no,
+      mytrip_no: el.user_mytrip_no,
     };
 
     return trip;
