@@ -1,5 +1,7 @@
 <script setup>
 import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 import kakaoInfowindow from "@/assets/img/kakaoInfowindow.jpg";
 
 const props = defineProps({
@@ -8,7 +10,8 @@ const props = defineProps({
     default: () => ({}),
   },
 });
-
+const router = useRouter();
+const store = useStore();
 const typelist = [
   { code: "12", name: "관광지" },
   { code: "14", name: "문화시설" },
@@ -19,6 +22,14 @@ const typelist = [
   { code: "38", name: "쇼핑" },
   { code: "39", name: "음식점" },
 ];
+async function addHotPlace() {
+  const hotplace = {
+    title: props.info.title,
+    address: props.info.addr1,
+  };
+  await store.commit("hotplaceStore/SET_HOTPLACE", hotplace);
+  router.push("/hotplace/write");
+}
 </script>
 <template>
   <div>
@@ -46,7 +57,9 @@ const typelist = [
       <v-card-actions>
         <v-btn color="orange"> Share </v-btn>
 
-        <v-btn color="orange"> Explore </v-btn>
+        <v-btn color="orange" class="font-weight-bold" @click="addHotPlace"
+          >핫플레이스 등록
+        </v-btn>
       </v-card-actions>
     </v-card>
   </div>

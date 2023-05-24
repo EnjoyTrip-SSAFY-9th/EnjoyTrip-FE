@@ -18,7 +18,12 @@ const hotplaceStore = {
     key: "",
     word: "",
     hotplaces: null,
-    hotplace: null,
+    hotplace: {
+      title: "",
+      content: "",
+      address: "",
+      userId: "",
+    },
     hotTop3: null,
     navigation: null,
   },
@@ -121,6 +126,7 @@ const hotplaceStore = {
       await writehotplaceFile(
         formData,
         async ({ data }) => {
+          commit("SET_HOTPLACE", null);
           const search = {
             sort: "hotplace_no",
             pgno: "1",

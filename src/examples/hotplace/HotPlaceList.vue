@@ -244,7 +244,7 @@ async function recommendEvent(hotplaceNo) {
       <ul class="pagination justify-content-center">
         <li class="page-item">
           <a href="#" class="page-link" v-on:click="pageClick('1', 'first')"
-            >최신</a
+            >처음</a
           >
         </li>
         <li class="page-item">
@@ -293,7 +293,7 @@ async function recommendEvent(hotplaceNo) {
             href="#"
             class="page-link"
             v-on:click="pageClick(navigation.totalPageCount, 'last')"
-            >마지막</a
+            >끝</a
           >
         </li>
       </ul>

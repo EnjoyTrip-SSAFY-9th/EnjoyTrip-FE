@@ -19,6 +19,7 @@ const boardStore = {
     word: "",
     boards: null,
     board: null,
+    now: null,
     navigation: null,
   },
   getters: {
@@ -44,6 +45,9 @@ const boardStore = {
     },
     SET_BOARD: (state, board) => {
       state.board = board;
+    },
+    SET_NOW: (state, now) => {
+      state.now = now;
     },
     SET_NAVIGATION: (state, navigation) => {
       state.navigation = navigation;
