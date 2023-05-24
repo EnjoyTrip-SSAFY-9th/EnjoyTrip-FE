@@ -13,6 +13,9 @@ const props = defineProps({
     default: () => [],
   },
 });
+
+const mytriplist = ref([]);
+
 let map = null;
 let markers = [];
 const store = useStore();
@@ -60,14 +63,15 @@ const loadMap = () => {
   map = new window.kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
 };
 
-function add(contentid) {
+function add(contentid, title) {
   // const { contentid } = dataset;
   const data = {
     content_id: contentid,
     user_id: userInfo.value.id,
     user_mytrip_no: max.value + 1,
   };
-  http.post(`/attraction/addMyTrip`, data);
+  mytriplist.value.push({ ...data, title });
+  // http.post(`/attraction/addMyTrip`, data);
 }
 
 function displayMarker(positions) {
@@ -105,7 +109,7 @@ function displayMarker(positions) {
     const marker = new window.kakao.maps.Marker({
       map: map, // 마커를 표시할 지도
       position: positions[i].latlng, // 마커를 표시할 위치
-      title: positions[i].contentId, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+      title: `${positions[i].contentId},${positions[i].title}`, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
       image: markerImage, // 마커 이미지
     });
 
@@ -118,8 +122,9 @@ function displayMarker(positions) {
     markers.push(marker);
 
     window.kakao.maps.event.addListener(marker, "click", () => {
-      toast(`${max.value + 1}번 여행계획에 추가되었습니다.`);
-      add(marker["Gb"]);
+      toast(`${(max.value ?? 0) + 1}번 여행계획에 추가되었습니다.`);
+      const result = marker.getTitle().split(",");
+      add(result[0], result[1]);
     });
     window.kakao.maps.event.addListener(marker, "mouseover", () => {
       infowindow.open(map, marker);
@@ -214,6 +219,12 @@ onMounted(() => {
 </script>
 
 <template>
+  <v-timeline direction="horizontal">
+    <v-timeline-item v-for="(item, index) in mytriplist" :key="index">
+      <template v-slot:opposite>{{ item.title }} </template>
+      {{ item.user_mytrip_no }}
+    </v-timeline-item>
+  </v-timeline>
   <div id="map"></div>
 </template>
 

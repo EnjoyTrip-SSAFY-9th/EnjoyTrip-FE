@@ -1,5 +1,11 @@
 <script setup>
 import { computed } from "vue";
+import { useQueryClient, useMutation } from "@tanstack/vue-query";
+import http from "../../api/http";
+import { useStore } from "vuex";
+
+const store = useStore();
+const userInfo = computed(() => store.state.userStore.userInfo);
 const props = defineProps({
   item: {
     type: Object,
@@ -25,6 +31,20 @@ const handleClick = (url) => {
     window.open(hrefValue, "_blank");
   }
 };
+
+const queryClient = useQueryClient();
+const { mutate } = useMutation({
+  mutationFn: (value) => http.delete(`/attraction/deleteMyTrip/${value.no}`),
+  onSuccess: () => {
+    queryClient.invalidateQueries({
+      queryKey: ["mytrip", userInfo.value.id, props.item.mytrip_no],
+    });
+  },
+});
+
+function deleteMyTrip() {
+  mutate({ no: props.item.no });
+}
 </script>
 <template>
   <v-timeline-item
@@ -41,13 +61,18 @@ const handleClick = (url) => {
           {{ overview }}
         </p>
         <v-btn
+          icon="mdi-open-in-new"
           v-if="props.item.homepage"
           :color="props.color.color"
           variant="outlined"
           @click="handleClick(props.item.homepage)"
-        >
-          홈페이지
-        </v-btn>
+        ></v-btn>
+        <v-btn
+          icon="mdi-delete-outline"
+          :color="props.color.color"
+          variant="outlined"
+          @click="deleteMyTrip"
+        ></v-btn>
       </v-card-text>
     </v-card>
   </v-timeline-item>
