@@ -3,6 +3,9 @@ import { onMounted, ref, computed, reactive, watch } from "vue";
 import { useQuery } from "@tanstack/vue-query";
 import http from "../../api/http";
 import { useStore } from "vuex";
+import { toast } from "vue3-toastify";
+
+import kakaoInfowindow from "@/assets/img/kakaoInfowindow.jpg";
 
 const props = defineProps({
   list: {
@@ -37,7 +40,6 @@ const { data: max } = useQuery({
   queryFn: getMyTripMax,
   staleTime: 60000,
 });
-
 
 const loadScript = () => {
   const script = document.createElement("script");
@@ -80,26 +82,21 @@ function displayMarker(positions) {
     // 마커 이미지의 이미지 크기 입니다
     var imageSize = new window.kakao.maps.Size(24, 35);
 
-    const iwContent = `<div class="title">
+    const iwContent = `
+            <div style="height:180px">
+             <div class="title">
                   ${positions[i].title}
-                  <div class="close" onclick="closeOverlay()" title="닫기"></div>
               </div>
-              <div class="body">
-                ${
-                  positions[i].firstimage
-                    ? `<div class="img">
-                <img src="${positions[i].firstimage}" width="73" height="70">
-            </div>`
-                    : ``
-                }
+              <div>
+                  <img src="${
+                    positions[i].firstimage || kakaoInfowindow
+                  }" width="63" height="60" />
                   <div class="desc">
-                      <div class="ellipsis">${positions[i].addr1}</div>
+                      <div>${positions[i].addr1}</div>
+                      <div>클릭시 계획에 추가</div>
                   </div>
-
-                  <button data-contentId = ${
-                    positions[i].contentId
-                  } onclick="add(this.dataset)">내 여행 계획에 추가</button>
-              </div>`;
+                </div>
+            </div>`;
 
     // 마커 이미지를 생성합니다
     var markerImage = new window.kakao.maps.MarkerImage(imageSrc, imageSize);
@@ -115,13 +112,13 @@ function displayMarker(positions) {
     // 인포윈도우를 생성합니다
     const infowindow = new window.kakao.maps.InfoWindow({
       content: iwContent,
-      removable: true,
+      // removable: true,
     });
 
     markers.push(marker);
 
     window.kakao.maps.event.addListener(marker, "click", () => {
-      console.log();
+      toast(`${max.value + 1}번 여행계획에 추가되었습니다.`);
       add(marker["Gb"]);
     });
     window.kakao.maps.event.addListener(marker, "mouseover", () => {

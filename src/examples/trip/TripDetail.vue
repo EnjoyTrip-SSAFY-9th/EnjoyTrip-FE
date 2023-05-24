@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from "vue";
+import kakaoInfowindow from "@/assets/img/kakaoInfowindow.jpg";
 
 const props = defineProps({
   info: {
@@ -25,16 +26,12 @@ const typelist = [
       <v-img
         class="align-end text-white"
         height="200"
-        :src="
-          props.info.firstimage ||
-          'https://images.unsplash.com/photo-1622998182589-f74aa3835777?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80'
-        "
+        :src="props.info.firstimage || kakaoInfowindow"
         cover
       >
-        <v-card-title>{{ props.info.title }}</v-card-title>
       </v-img>
-
-      <v-card-subtitle class="pt-4">
+      <v-card-title>{{ props.info.title }}</v-card-title>
+      <v-card-subtitle>
         {{
           typelist.filter((el) => el.code == props.info.contenttypeid)[0].name
         }}

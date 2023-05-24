@@ -34,7 +34,9 @@ const guguncode = computed(() => select.value?.gugun);
 const typecode = computed(() => select.value?.type);
 const search = computed(() => select.value?.search);
 const enabled = computed(
-  () => !!select.value?.sido && !!select.value?.gugun && !!select.value?.type
+  () =>
+    (!!select.value?.sido && !!select.value?.gugun && !!select.value?.type) ||
+    (!!select.value?.search && select.value?.search.length >= 2)
 );
 
 const { data: list } = useQuery({
@@ -94,7 +96,13 @@ async function fetchAttraction(
       ></v-pagination>
     </div>
     <div>
-      <TripDetailList :list="list" />
+      <v-card-title
+        :class="['text-h6', `bg-white-lighten-2`]"
+        v-if="list == undefined || list?.length === 0"
+      >
+        검색 결과가 없습니다
+      </v-card-title>
+      <TripDetailList :list="list" v-if="list?.length !== 0" />
     </div>
   </div>
 </template>

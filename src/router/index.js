@@ -292,11 +292,13 @@ const router = createRouter({
     {
       path: "/trip",
       name: "trip",
+      beforeEnter: onlyAuthUser,
       component: Trip,
     },
     {
       path: "/mytrip",
       name: "mytrip",
+      beforeEnter: onlyAuthUser,
       component: MyTrip,
     },
     {
