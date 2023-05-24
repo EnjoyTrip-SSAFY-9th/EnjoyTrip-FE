@@ -6,13 +6,29 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+  max: {
+    type: Number,
+    default: 0,
+  },
 });
+
+const emit = defineEmits(["addMytriplist"]);
+
+const addMytriplist = (data) => {
+  emit("addMytriplist", data);
+};
 
 const list = computed(() => props.list);
 </script>
 <template>
   <div class="container">
-    <TripDetail v-for="info in list" :key="info.contentid" :info="info" />
+    <TripDetail
+      v-for="info in list"
+      :key="info.contentid"
+      :info="info"
+      :max="max"
+      @addMytriplist="addMytriplist"
+    />
   </div>
 </template>
 <style scoped>

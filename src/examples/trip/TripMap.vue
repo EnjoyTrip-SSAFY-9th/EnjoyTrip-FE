@@ -1,10 +1,9 @@
 <script setup>
 import { onMounted, ref, computed, reactive, watch } from "vue";
-import { useQuery } from "@tanstack/vue-query";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/vue-query";
 import http from "../../api/http";
 import { useStore } from "vuex";
 import { toast } from "vue3-toastify";
-
 import kakaoInfowindow from "@/assets/img/kakaoInfowindow.jpg";
 
 const props = defineProps({
@@ -12,9 +11,13 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+  mytriplist: {
+    type: Array,
+    default: () => [],
+  },
 });
 
-const mytriplist = ref([]);
+const emit = defineEmits(["initMytriplist", "addMytriplist", "changeMax"]);
 
 let map = null;
 let markers = [];
@@ -31,17 +34,34 @@ watch(data, (newValue) => {
   }
 });
 
+// const getMyTripAll = async () => {
+//   const data = await (
+//     await http.get(`/attraction/getMyTripAll/${userInfo.value.id}`)
+//   ).data;
+
+//   return data;
+// };
+
+// const { data: all } = useQuery({
+//   queryKey: ["mytripAll", userInfo.value.id],
+//   queryFn: getMyTripAll,
+// });
+
 const getMyTripMax = async () => {
   const data = await (
     await http.get(`/attraction/getMyTripMax/${userInfo.value.id}`)
   ).data;
-  return data;
+  return data || 0;
 };
 
 const { data: max } = useQuery({
   queryKey: ["mytripmax", userInfo.value.id],
   queryFn: getMyTripMax,
-  staleTime: 60000,
+  onSuccess: (v) => {
+    emit("changeMax", v || 0);
+  },
+  staleTime: Infinity,
+  cacheTime: Infinity,
 });
 
 const loadScript = () => {
@@ -70,9 +90,27 @@ function add(contentid, title) {
     user_id: userInfo.value.id,
     user_mytrip_no: max.value + 1,
   };
-  mytriplist.value.push({ ...data, title });
+  emit("addMytriplist", { ...data, title });
+  // mytriplist.value.push({ ...data, title });
   // http.post(`/attraction/addMyTrip`, data);
 }
+
+const queryClient = useQueryClient();
+const { mutate } = useMutation({
+  mutationFn: () => http.post(`/attraction/addMyTripAll`, props.mytriplist),
+  onSuccess: async () => {
+    queryClient.invalidateQueries({
+      queryKey: ["mytripmax", userInfo.value.id],
+    });
+    // mytriplist.value = [];
+    emit("initMytriplist");
+    toast.success(`여행계획이 추가되었습니다.`);
+  },
+});
+
+const mytripAllAdd = async () => {
+  mutate();
+};
 
 function displayMarker(positions) {
   setMarkers(null);
@@ -219,12 +257,16 @@ onMounted(() => {
 </script>
 
 <template>
-  <v-timeline direction="horizontal">
-    <v-timeline-item v-for="(item, index) in mytriplist" :key="index">
-      <template v-slot:opposite>{{ item.title }} </template>
-      {{ item.user_mytrip_no }}
-    </v-timeline-item>
-  </v-timeline>
+  <div class="mytrip" v-if="props.mytriplist.length > 0">
+    <v-card-title>{{ max + 1 }}번 여행계획</v-card-title>
+    <v-timeline direction="horizontal">
+      <v-timeline-item v-for="(item, index) in props.mytriplist" :key="index">
+        <template v-slot:opposite>{{ item.title }} </template>
+        {{ index + 1 }}
+      </v-timeline-item>
+    </v-timeline>
+    <v-btn icon="mdi-plus" size="small" @click="mytripAllAdd"></v-btn>
+  </div>
   <div id="map"></div>
 </template>
 
@@ -241,5 +283,10 @@ onMounted(() => {
   width: 100vw;
   height: 100vh;
   margin: auto;
+}
+
+.mytrip {
+  display: flex;
+  align-items: center;
 }
 </style>

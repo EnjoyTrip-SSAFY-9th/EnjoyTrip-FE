@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import kakaoInfowindow from "@/assets/img/kakaoInfowindow.jpg";
@@ -9,7 +9,14 @@ const props = defineProps({
     type: Object,
     default: () => ({}),
   },
+  max: {
+    type: Number,
+    default: 0,
+  },
 });
+
+const emit = defineEmits(["addMytriplist"]);
+
 const router = useRouter();
 const store = useStore();
 const typelist = [
@@ -30,6 +37,19 @@ async function addHotPlace() {
   await store.commit("hotplaceStore/SET_HOTPLACE", hotplace);
   router.push("/hotplace/write");
 }
+
+const userInfo = computed(() => store.state.userStore.userInfo);
+
+const handleClick = () => {
+  const data = {
+    content_id: props.info.contentid,
+    user_id: userInfo.value.id,
+    user_mytrip_no: props.max + 1,
+    title: props.info.title,
+  };
+  console.log(data);
+  emit("addMytriplist", data);
+};
 </script>
 <template>
   <div>
@@ -55,7 +75,7 @@ async function addHotPlace() {
       </v-card-text>
 
       <v-card-actions>
-        <v-btn color="orange"> Share </v-btn>
+        <v-btn color="orange" @click="handleClick"> 여행게획 추가 </v-btn>
 
         <v-btn color="orange" class="font-weight-bold" @click="addHotPlace"
           >핫플레이스 등록

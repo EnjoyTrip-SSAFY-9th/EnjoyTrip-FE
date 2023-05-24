@@ -74,6 +74,21 @@ async function fetchAttraction(
   if (!item || item.length == 0) return [];
   return data.response.body.items.item;
 }
+
+const mytriplist = ref([]);
+const max = ref(0);
+const addMytriplist = (value) => {
+  console.log(value);
+  mytriplist.value.push(value);
+};
+
+const initMytriplist = () => {
+  mytriplist.value = [];
+};
+
+const changeMax = (value) => {
+  max.value = value;
+};
 </script>
 <template>
   <div class="trip-container">
@@ -84,7 +99,13 @@ async function fetchAttraction(
       @changeGugun="changeGugun"
       @changeType="changeType"
     />
-    <TripMap :list="list" />
+    <TripMap
+      :list="list"
+      :mytriplist="mytriplist"
+      @addMytriplist="addMytriplist"
+      @initMytriplist="initMytriplist"
+      @changeMax="changeMax"
+    />
     {{ totalCount }}
     <div class="paging">
       <v-pagination
@@ -102,7 +123,12 @@ async function fetchAttraction(
       >
         검색 결과가 없습니다
       </v-card-title>
-      <TripDetailList :list="list" v-if="list?.length !== 0" />
+      <TripDetailList
+        :list="list"
+        :max="max"
+        @addMytriplist="addMytriplist"
+        v-if="list?.length !== 0"
+      />
     </div>
   </div>
 </template>

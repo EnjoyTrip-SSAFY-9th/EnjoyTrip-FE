@@ -19,7 +19,6 @@ import "./assets/css/nucleo-svg.css";
 import materialKit from "./material-kit";
 import { VueQueryPlugin } from "@tanstack/vue-query";
 
-
 const vuetify = createVuetify({
   components,
   directives,
