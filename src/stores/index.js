@@ -9,8 +9,6 @@ export const useAppStore = defineStore("storeId", {
   }),
 });
 
-
-
 // import { createApp } from 'vue';
 // import { createStore } from 'vuex';
 // import createPersistedState from 'vuex-persistedstate';

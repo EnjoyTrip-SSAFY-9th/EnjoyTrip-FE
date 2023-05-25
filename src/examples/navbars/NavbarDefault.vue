@@ -100,18 +100,12 @@ const store = useStore();
 // const userInfo = computed(() => store.state.userStore.userInfo);
 const isLogin = computed(() => store.state.userStore.isLogin);
 
-function test() {
-  store.commit("userStore/SET_IS_LOGIN", false);
-}
-
 async function logout() {
   console.log("로그아웃 -> " + store.state.userStore.userInfo.id);
   await store.dispatch(
     "userStore/userLogout",
     store.state.userStore.userInfo.id
   );
-  store.commit("userStore/SET_IS_LOGIN", false); // 왜 store에서 커밋하는 것은 갱신이 안되고 여기서 커밋해야 state 갱신이 되는 걸까?
-  // console.log(isLogin);
   toast.success("로그아웃 완료", {
     autoClose: 2000,
   });
@@ -122,15 +116,6 @@ async function admin() {
   await store.dispatch("adminStore/getUsersInfo", "1", "", "");
   router.push("/admin");
 }
-// const store = useStore();
-// // const login = computed(() => store.state.isLogin);
-// const data = computed(() => store.getters);
-// // console.log(data.login);
-
-// computed( () => (...mapState(['userInfo']))
-// );
-
-//
 </script>
 
 <template>
@@ -152,7 +137,6 @@ async function admin() {
           : 'container-fluid px-0'
       "
     >
-      <!-- <div v-on:click="test()">{{ isLogin }}</div> -->
       <RouterLink
         class="navbar-brand d-none d-md-block"
         :class="[
@@ -165,7 +149,7 @@ async function admin() {
         title="Designed and Coded by Creative Tim"
         data-placement="bottom"
       >
-        Enjoy Trip
+        🛫Wanderlustify🛬
       </RouterLink>
       <RouterLink
         class="navbar-brand d-block d-md-none"
@@ -179,13 +163,9 @@ async function admin() {
         title="Designed and Coded by Creative Tim"
         data-placement="bottom"
       >
-        Material Design
+        🛫Wanderlustify🛬
       </RouterLink>
-      <!-- <a
-        href="https://www.creative-tim.com/product/vue-material-kit-pro"
-        class="btn btn-sm bg-gradient-success mb-0 ms-auto d-lg-none d-block"
-        >Buy NoW</a
-      > -->
+
       <button
         class="navbar-toggler shadow-none ms-2"
         type="button"
@@ -240,565 +220,56 @@ async function admin() {
                 <div class="col-12 px-4 py-2">
                   <div class="row">
                     <div class="position-relative">
-                      <div
-                        class="dropdown-header text-dark font-weight-bolder d-flex align-items-center px-1"
-                      >
-                        여행
-                      </div>
                       <RouterLink
-                        :to="{ name: 'contactus' }"
+                        :to="{ name: 'trip' }"
                         class="dropdown-item border-radius-md"
                       >
-                        <span>지역별 관광지</span>
+                        <h6
+                          class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0"
+                        >
+                          지역별 관광지
+                        </h6>
                       </RouterLink>
                       <RouterLink
-                        :to="{ name: 'board' }"
+                        :to="{ name: 'mytrip' }"
                         class="dropdown-item border-radius-md"
                       >
-                        <span>여행 정보 공유</span>
-                      </RouterLink>
-                      <RouterLink
-                        :to="{ name: 'author' }"
-                        class="dropdown-item border-radius-md"
-                      >
-                        <span>여행 계획</span>
-                      </RouterLink>
-                      <div
-                        class="dropdown-header text-dark font-weight-bolder d-flex align-items-center px-0 mt-3"
-                      >
-                        핫플레이스
-                      </div>
-                      <RouterLink
-                        :to="{ name: 'signin-basic' }"
-                        class="dropdown-item border-radius-md"
-                      >
-                        <span>핫플레이스</span>
+                        <h6
+                          class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0"
+                        >
+                          여행 계획
+                        </h6>
                       </RouterLink>
                     </div>
                   </div>
                 </div>
               </div>
               <div class="d-lg-none">
-                <div
-                  class="dropdown-header text-dark font-weight-bolder d-flex align-items-center px-0"
-                >
-                  여행
-                </div>
                 <RouterLink
-                  :to="{ name: 'contactus' }"
+                  :to="{ name: 'trip' }"
                   class="dropdown-item border-radius-md"
                 >
-                  <span>Contact Us</span>
+                  <h6
+                    class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0"
+                  >
+                    지역별 관광지
+                  </h6>
                 </RouterLink>
+
                 <RouterLink
-                  :to="{ name: 'board' }"
+                  :to="{ name: 'mytrip' }"
                   class="dropdown-item border-radius-md"
                 >
-                  <span>여행 정보 공유</span>
-                </RouterLink>
-                <RouterLink
-                  :to="{ name: 'author' }"
-                  class="dropdown-item border-radius-md"
-                >
-                  <span>Author</span>
-                </RouterLink>
-                <div
-                  class="dropdown-header text-dark font-weight-bolder d-flex align-items-center px-0 mt-3"
-                >
-                  핫플레이스
-                </div>
-                <RouterLink
-                  :to="{ name: 'signin-basic' }"
-                  class="dropdown-item border-radius-md"
-                >
-                  <span>핫플레이스</span>
+                  <h6
+                    class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0"
+                  >
+                    여행 계획
+                  </h6>
                 </RouterLink>
               </div>
             </div>
           </li>
-          <li class="nav-item dropdown dropdown-hover mx-2">
-            <a
-              role="button"
-              class="nav-link ps-2 d-flex cursor-pointer align-items-center"
-              :class="getTextColor()"
-              id="dropdownMenuBlocks"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <i
-                class="material-icons opacity-6 me-2 text-md"
-                :class="getTextColor()"
-                >view_day</i
-              >
-              여행계획
-              <img
-                :src="getArrowColor()"
-                alt="down-arrow"
-                class="arrow ms-2 d-lg-block d-none"
-              />
-              <img
-                :src="getArrowColor()"
-                alt="down-arrow"
-                class="arrow ms-1 d-lg-none d-block ms-auto"
-              />
-            </a>
-            <div
-              class="dropdown-menu dropdown-menu-end dropdown-menu-animation dropdown-md dropdown-md-responsive p-3 border-radius-lg mt-0 mt-lg-3"
-              aria-labelledby="dropdownMenuBlocks"
-            >
-              <div class="d-none d-lg-block">
-                <ul class="list-group">
-                  <li
-                    class="nav-item dropdown dropdown-hover dropdown-subitem list-group-item border-0 p-0"
-                  >
-                    <a
-                      class="dropdown-item py-2 ps-3 border-radius-md"
-                      href="javascript:;"
-                    >
-                      <div class="d-flex">
-                        <div
-                          class="w-100 d-flex align-items-center justify-content-between"
-                        >
-                          <div>
-                            <h6
-                              class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0"
-                            >
-                              Page Sections
-                            </h6>
-                            <span class="text-sm">See all sections</span>
-                          </div>
-                          <img
-                            :src="downArrow"
-                            alt="down-arrow"
-                            class="arrow"
-                          />
-                        </div>
-                      </div>
-                    </a>
-                    <div class="dropdown-menu mt-0 py-3 px-2 mt-3">
-                      <RouterLink
-                        class="dropdown-item ps-3 border-radius-md mb-1"
-                        :to="{ name: 'page-headers' }"
-                      >
-                        Page Headers
-                      </RouterLink>
-                      <RouterLink
-                        class="dropdown-item ps-3 border-radius-md mb-1"
-                        :to="{ name: 'page-features' }"
-                      >
-                        Features
-                      </RouterLink>
-                    </div>
-                  </li>
-                  <li
-                    class="nav-item dropdown dropdown-hover dropdown-subitem list-group-item border-0 p-0"
-                  >
-                    <a
-                      class="dropdown-item py-2 ps-3 border-radius-md"
-                      href="javascript:;"
-                    >
-                      <div class="d-flex">
-                        <div
-                          class="w-100 d-flex align-items-center justify-content-between"
-                        >
-                          <div>
-                            <h6
-                              class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0"
-                            >
-                              Navigation
-                            </h6>
-                            <span class="text-sm">See all navigations</span>
-                          </div>
-                          <img
-                            :src="downArrow"
-                            alt="down-arrow"
-                            class="arrow"
-                          />
-                        </div>
-                      </div>
-                    </a>
-                    <div class="dropdown-menu mt-0 py-3 px-2 mt-3">
-                      <RouterLink
-                        class="dropdown-item ps-3 border-radius-md mb-1"
-                        :to="{ name: 'navigation-navbars' }"
-                      >
-                        Navbars
-                      </RouterLink>
-                      <RouterLink
-                        class="dropdown-item ps-3 border-radius-md mb-1"
-                        :to="{ name: 'navigation-navtabs' }"
-                      >
-                        Nav Tabs
-                      </RouterLink>
-                      <RouterLink
-                        class="dropdown-item ps-3 border-radius-md mb-1"
-                        :to="{ name: 'navigation-pagination' }"
-                      >
-                        Pagination
-                      </RouterLink>
-                    </div>
-                  </li>
-                  <li
-                    class="nav-item dropdown dropdown-hover dropdown-subitem list-group-item border-0 p-0"
-                  >
-                    <a
-                      class="dropdown-item py-2 ps-3 border-radius-md"
-                      href="javascript:;"
-                    >
-                      <div class="d-flex">
-                        <div
-                          class="w-100 d-flex align-items-center justify-content-between"
-                        >
-                          <div>
-                            <h6
-                              class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0"
-                            >
-                              Input Areas
-                            </h6>
-                            <span class="text-sm">See all input areas</span>
-                          </div>
-                          <img
-                            :src="downArrow"
-                            alt="down-arrow"
-                            class="arrow"
-                          />
-                        </div>
-                      </div>
-                    </a>
-                    <div class="dropdown-menu mt-0 py-3 px-2 mt-3">
-                      <RouterLink
-                        class="dropdown-item ps-3 border-radius-md mb-1"
-                        :to="{ name: 'inputareas-inputs' }"
-                      >
-                        Inputs
-                      </RouterLink>
-                      <RouterLink
-                        class="dropdown-item ps-3 border-radius-md mb-1"
-                        :to="{ name: 'inputareas-forms' }"
-                      >
-                        Forms
-                      </RouterLink>
-                    </div>
-                  </li>
-                  <li
-                    class="nav-item dropdown dropdown-hover dropdown-subitem list-group-item border-0 p-0"
-                  >
-                    <a
-                      class="dropdown-item py-2 ps-3 border-radius-md"
-                      href="javascript:;"
-                    >
-                      <div class="d-flex">
-                        <div
-                          class="w-100 d-flex align-items-center justify-content-between"
-                        >
-                          <div>
-                            <h6
-                              class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0"
-                            >
-                              Attention Catchers
-                            </h6>
-                            <span class="text-sm">See all examples</span>
-                          </div>
-                          <img
-                            :src="downArrow"
-                            alt="down-arrow"
-                            class="arrow"
-                          />
-                        </div>
-                      </div>
-                    </a>
-                    <div class="dropdown-menu mt-0 py-3 px-2 mt-3">
-                      <RouterLink
-                        class="dropdown-item ps-3 border-radius-md mb-1"
-                        :to="{ name: 'ac-alerts' }"
-                      >
-                        Alerts
-                      </RouterLink>
-                      <RouterLink
-                        class="dropdown-item ps-3 border-radius-md mb-1"
-                        :to="{ name: 'ac-modals' }"
-                      >
-                        Modals
-                      </RouterLink>
-                      <RouterLink
-                        class="dropdown-item ps-3 border-radius-md mb-1"
-                        :to="{ name: 'ac-tooltips-popovers' }"
-                      >
-                        Tooltips & Popovers
-                      </RouterLink>
-                    </div>
-                  </li>
-                  <li
-                    class="nav-item dropdown dropdown-hover dropdown-subitem list-group-item border-0 p-0"
-                  >
-                    <a
-                      class="dropdown-item py-2 ps-3 border-radius-md"
-                      href="javascript:;"
-                    >
-                      <div class="d-flex">
-                        <div
-                          class="w-100 d-flex align-items-center justify-content-between"
-                        >
-                          <div>
-                            <h6
-                              class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0"
-                            >
-                              Elements
-                            </h6>
-                            <span class="text-sm">See all elements</span>
-                          </div>
-                          <img
-                            :src="downArrow"
-                            alt="down-arrow"
-                            class="arrow"
-                          />
-                        </div>
-                      </div>
-                    </a>
-                    <div class="dropdown-menu mt-0 py-3 px-2 mt-3">
-                      <RouterLink
-                        class="dropdown-item ps-3 border-radius-md mb-1"
-                        :to="{ name: 'el-avatars' }"
-                      >
-                        Avatars
-                      </RouterLink>
-                      <RouterLink
-                        class="dropdown-item ps-3 border-radius-md mb-1"
-                        :to="{ name: 'el-badges' }"
-                      >
-                        Badges
-                      </RouterLink>
-                      <RouterLink
-                        class="dropdown-item ps-3 border-radius-md mb-1"
-                        :to="{ name: 'el-breadcrumbs' }"
-                      >
-                        Breadcrumbs
-                      </RouterLink>
-                      <RouterLink
-                        class="dropdown-item ps-3 border-radius-md mb-1"
-                        :to="{ name: 'el-buttons' }"
-                      >
-                        Buttons
-                      </RouterLink>
-                      <RouterLink
-                        class="dropdown-item ps-3 border-radius-md mb-1"
-                        :to="{ name: 'el-button-groups' }"
-                      >
-                        Button Groups
-                      </RouterLink>
-                      <RouterLink
-                        class="dropdown-item ps-3 border-radius-md mb-1"
-                        :to="{ name: 'el-dropdowns' }"
-                      >
-                        Dropdowns
-                      </RouterLink>
-                      <RouterLink
-                        class="dropdown-item ps-3 border-radius-md mb-1"
-                        :to="{ name: 'el-progress-bars' }"
-                      >
-                        Progress Bars
-                      </RouterLink>
-                      <RouterLink
-                        class="dropdown-item ps-3 border-radius-md mb-1"
-                        :to="{ name: 'el-toggles' }"
-                      >
-                        Toggles
-                      </RouterLink>
-                      <RouterLink
-                        class="dropdown-item ps-3 border-radius-md mb-1"
-                        :to="{ name: 'el-typography' }"
-                      >
-                        Typography
-                      </RouterLink>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-              <div class="row d-lg-none">
-                <div class="col-md-12">
-                  <div class="d-flex mb-2">
-                    <div
-                      class="w-100 d-flex align-items-center justify-content-between"
-                    >
-                      <div>
-                        <h6
-                          class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0"
-                        >
-                          Page Sections
-                        </h6>
-                      </div>
-                    </div>
-                  </div>
-                  <RouterLink
-                    class="dropdown-item ps-3 border-radius-md mb-1"
-                    :to="{ name: 'page-headers' }"
-                  >
-                    Page Headers
-                  </RouterLink>
-                  <RouterLink
-                    class="dropdown-item ps-3 border-radius-md mb-1"
-                    :to="{ name: 'page-features' }"
-                  >
-                    Features
-                  </RouterLink>
-                  <div class="d-flex mb-2 mt-3">
-                    <div
-                      class="w-100 d-flex align-items-center justify-content-between"
-                    >
-                      <div>
-                        <h6
-                          class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0"
-                        >
-                          Navigation
-                        </h6>
-                      </div>
-                    </div>
-                  </div>
-                  <RouterLink
-                    class="dropdown-item ps-3 border-radius-md mb-1"
-                    :to="{ name: 'navigation-navbars' }"
-                  >
-                    Navbars
-                  </RouterLink>
-                  <RouterLink
-                    class="dropdown-item ps-3 border-radius-md mb-1"
-                    :to="{ name: 'navigation-navtabs' }"
-                  >
-                    Nav Tabs
-                  </RouterLink>
-                  <RouterLink
-                    class="dropdown-item ps-3 border-radius-md mb-1"
-                    :to="{ name: 'navigation-pagination' }"
-                  >
-                    Pagination
-                  </RouterLink>
-                  <div class="d-flex mb-2 mt-3">
-                    <div
-                      class="w-100 d-flex align-items-center justify-content-between"
-                    >
-                      <div>
-                        <h6
-                          class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0"
-                        >
-                          Input Areas
-                        </h6>
-                      </div>
-                    </div>
-                  </div>
-                  <RouterLink
-                    class="dropdown-item ps-3 border-radius-md mb-1"
-                    :to="{ name: 'inputareas-inputs' }"
-                  >
-                    Inputs
-                  </RouterLink>
-                  <RouterLink
-                    class="dropdown-item ps-3 border-radius-md mb-1"
-                    :to="{ name: 'inputareas-forms' }"
-                  >
-                    Forms
-                  </RouterLink>
-                  <div class="d-flex mb-2 mt-3">
-                    <div
-                      class="w-100 d-flex align-items-center justify-content-between"
-                    >
-                      <div>
-                        <h6
-                          class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0"
-                        >
-                          Attention Catchers
-                        </h6>
-                      </div>
-                    </div>
-                  </div>
-                  <RouterLink
-                    class="dropdown-item ps-3 border-radius-md mb-1"
-                    :to="{ name: 'ac-alerts' }"
-                  >
-                    Alerts
-                  </RouterLink>
-                  <RouterLink
-                    class="dropdown-item ps-3 border-radius-md mb-1"
-                    :to="{ name: 'ac-modals' }"
-                  >
-                    Modals
-                  </RouterLink>
-                  <RouterLink
-                    class="dropdown-item ps-3 border-radius-md mb-1"
-                    :to="{ name: 'ac-tooltips-popovers' }"
-                  >
-                    Tooltips & Popovers
-                  </RouterLink>
-                  <div class="d-flex mb-2 mt-3">
-                    <div
-                      class="w-100 d-flex align-items-center justify-content-between"
-                    >
-                      <div>
-                        <h6
-                          class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0"
-                        >
-                          Elements
-                        </h6>
-                      </div>
-                    </div>
-                  </div>
-                  <RouterLink
-                    class="dropdown-item ps-3 border-radius-md mb-1"
-                    :to="{ name: 'el-avatars' }"
-                  >
-                    Avatars
-                  </RouterLink>
-                  <RouterLink
-                    class="dropdown-item ps-3 border-radius-md mb-1"
-                    :to="{ name: 'el-badges' }"
-                  >
-                    Badges
-                  </RouterLink>
-                  <RouterLink
-                    class="dropdown-item ps-3 border-radius-md mb-1"
-                    :to="{ name: 'el-breadcrumbs' }"
-                  >
-                    Breadcrumbs
-                  </RouterLink>
-                  <RouterLink
-                    class="dropdown-item ps-3 border-radius-md mb-1"
-                    :to="{ name: 'el-buttons' }"
-                  >
-                    Buttons
-                  </RouterLink>
-                  <RouterLink
-                    class="dropdown-item ps-3 border-radius-md mb-1"
-                    :to="{ name: 'el-button-groups' }"
-                  >
-                    Button Groups
-                  </RouterLink>
-                  <RouterLink
-                    class="dropdown-item ps-3 border-radius-md mb-1"
-                    :to="{ name: 'el-dropdowns' }"
-                  >
-                    Dropdowns
-                  </RouterLink>
-                  <RouterLink
-                    class="dropdown-item ps-3 border-radius-md mb-1"
-                    :to="{ name: 'el-progress-bars' }"
-                  >
-                    Progress Bars
-                  </RouterLink>
-                  <RouterLink
-                    class="dropdown-item ps-3 border-radius-md mb-1"
-                    :to="{ name: 'el-toggles' }"
-                  >
-                    Toggles
-                  </RouterLink>
-                  <RouterLink
-                    class="dropdown-item ps-3 border-radius-md mb-1"
-                    :to="{ name: 'el-typography' }"
-                  >
-                    Typography
-                  </RouterLink>
-                </div>
-              </div>
-            </div>
-          </li>
+
           <li class="nav-item dropdown dropdown-hover mx-2">
             <a
               role="button"
@@ -813,7 +284,7 @@ async function admin() {
                 :class="getTextColor()"
                 >article</i
               >
-              핫플레이스
+              여행 정보
               <img
                 :src="getArrowColor()"
                 alt="down-arrow"
@@ -831,124 +302,50 @@ async function admin() {
             >
               <div class="d-none d-lg-block">
                 <ul class="list-group">
-                  <li class="nav-item list-group-item border-0 p-0">
-                    <a
-                      class="dropdown-item py-2 ps-3 border-radius-md"
-                      href=" https://www.creative-tim.com/learning-lab/vue/overview/material-kit/"
+                  <RouterLink
+                    :to="{ name: 'board' }"
+                    class="dropdown-item border-radius-md"
+                  >
+                    <h6
+                      class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0"
                     >
-                      <h6
-                        class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0"
-                      >
-                        Getting Started
-                      </h6>
-                      <span class="text-sm"
-                        >All about overview, quick start, license and
-                        contents</span
-                      >
-                    </a>
-                  </li>
-                  <li class="nav-item list-group-item border-0 p-0">
-                    <a
-                      class="dropdown-item py-2 ps-3 border-radius-md"
-                      href=" https://www.creative-tim.com/learning-lab/vue/colors/material-kit/"
+                      정보 공유
+                    </h6>
+                  </RouterLink>
+                  <RouterLink
+                    :to="{ name: 'hotplace' }"
+                    class="dropdown-item border-radius-md"
+                  >
+                    <h6
+                      class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0"
                     >
-                      <h6
-                        class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0"
-                      >
-                        Foundation
-                      </h6>
-                      <span class="text-sm"
-                        >See our colors, icons and typography</span
-                      >
-                    </a>
-                  </li>
-                  <li class="nav-item list-group-item border-0 p-0">
-                    <a
-                      class="dropdown-item py-2 ps-3 border-radius-md"
-                      href=" https://www.creative-tim.com/learning-lab/vue/alerts/material-kit/"
-                    >
-                      <h6
-                        class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0"
-                      >
-                        Components
-                      </h6>
-                      <span class="text-sm"
-                        >Explore our collection of fully designed
-                        components</span
-                      >
-                    </a>
-                  </li>
+                      핫플레이스
+                    </h6>
+                  </RouterLink>
                 </ul>
               </div>
               <div class="row d-lg-none">
                 <div class="col-md-12 g-0">
-                  <a
-                    class="dropdown-item py-2 ps-3 border-radius-md"
-                    href="./pages/about-us.html"
+                  <RouterLink
+                    :to="{ name: 'board' }"
+                    class="dropdown-item border-radius-md"
                   >
                     <h6
                       class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0"
                     >
-                      Getting Started
+                      정보 공유
                     </h6>
-                    <span class="text-sm"
-                      >All about overview, quick start, license and
-                      contents</span
-                    >
-                  </a>
-                  <a
-                    class="dropdown-item py-2 ps-3 border-radius-md"
-                    href="./pages/about-us.html"
+                  </RouterLink>
+                  <RouterLink
+                    :to="{ name: 'hotplace' }"
+                    class="dropdown-item border-radius-md"
                   >
                     <h6
                       class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0"
                     >
-                      Foundation
+                      핫플레이스
                     </h6>
-                    <span class="text-sm"
-                      >See our colors, icons and typography</span
-                    >
-                  </a>
-                  <a
-                    class="dropdown-item py-2 ps-3 border-radius-md"
-                    href="./pages/about-us.html"
-                  >
-                    <h6
-                      class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0"
-                    >
-                      Components
-                    </h6>
-                    <span class="text-sm"
-                      >Explore our collection of fully designed components</span
-                    >
-                  </a>
-                  <a
-                    class="dropdown-item py-2 ps-3 border-radius-md"
-                    href="./pages/about-us.html"
-                  >
-                    <h6
-                      class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0"
-                    >
-                      Plugins
-                    </h6>
-                    <span class="text-sm"
-                      >Check how you can integrate our plugins</span
-                    >
-                  </a>
-                  <a
-                    class="dropdown-item py-2 ps-3 border-radius-md"
-                    href="./pages/about-us.html"
-                  >
-                    <h6
-                      class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0"
-                    >
-                      Utility Classes
-                    </h6>
-                    <span class="text-sm"
-                      >For those who want flexibility, use our utility
-                      classes</span
-                    >
-                  </a>
+                  </RouterLink>
                 </div>
               </div>
             </div>
@@ -994,23 +391,7 @@ async function admin() {
                       </h6></router-link
                     >
                   </li>
-                  <!--
-                  <li class="nav-item list-group-item border-0 p-0">
-                    <a
-                      class="dropdown-item py-2 ps-3 border-radius-md"
-                      href=" https://www.creative-tim.com/learning-lab/vue/colors/material-kit/"
-                    >
-                      <h6
-                        class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0"
-                      >
-                        
-                      </h6>
-                      <span class="text-sm"
-                        >See our colors, icons and typography</span
-                      >
-                    </a>
-                  </li>
-                  -->
+
                   <li
                     class="nav-item list-group-item border-0 p-0"
                     v-if="
@@ -1029,15 +410,6 @@ async function admin() {
                         회원 관리
                       </h6>
                     </a>
-                    <!-- <router-link
-                      to="/admin"
-                      class="dropdown-item py-2 ps-3 border-radius-md"
-                      ><h6
-                        class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0"
-                      >
-                        회원 관리
-                      </h6></router-link
-                    > -->
                   </li>
 
                   <li class="nav-item list-group-item border-0 p-0">
@@ -1057,97 +429,57 @@ async function admin() {
               </div>
               <div class="row d-lg-none">
                 <div class="col-md-12 g-0">
-                  <a
-                    class="dropdown-item py-2 ps-3 border-radius-md"
-                    href="./pages/about-us.html"
-                  >
-                    <h6
-                      class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0"
+                  <ul class="list-group">
+                    <li class="nav-item list-group-item border-0 p-0">
+                      <router-link
+                        to="/mypage"
+                        class="dropdown-item py-2 ps-3 border-radius-md"
+                        ><h6
+                          class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0"
+                        >
+                          마이페이지
+                        </h6></router-link
+                      >
+                    </li>
+
+                    <li
+                      class="nav-item list-group-item border-0 p-0"
+                      v-if="
+                        store.state.userStore.userInfo != null &&
+                        store.state.userStore.userInfo.isAdmin
+                      "
                     >
-                      Getting Started
-                    </h6>
-                    <span class="text-sm"
-                      >All about overview, quick start, license and
-                      contents</span
-                    >
-                  </a>
-                  <a
-                    class="dropdown-item py-2 ps-3 border-radius-md"
-                    href="./pages/about-us.html"
-                  >
-                    <h6
-                      class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0"
-                    >
-                      Foundation
-                    </h6>
-                    <span class="text-sm"
-                      >See our colors, icons and typography</span
-                    >
-                  </a>
-                  <a
-                    class="dropdown-item py-2 ps-3 border-radius-md"
-                    href="./pages/about-us.html"
-                  >
-                    <h6
-                      class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0"
-                    >
-                      Components
-                    </h6>
-                    <span class="text-sm"
-                      >Explore our collection of fully designed components</span
-                    >
-                  </a>
-                  <a
-                    class="dropdown-item py-2 ps-3 border-radius-md"
-                    href="./pages/about-us.html"
-                  >
-                    <h6
-                      class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0"
-                    >
-                      Plugins
-                    </h6>
-                    <span class="text-sm"
-                      >Check how you can integrate our plugins</span
-                    >
-                  </a>
-                  <a
-                    class="dropdown-item py-2 ps-3 border-radius-md"
-                    href="./pages/about-us.html"
-                  >
-                    <h6
-                      class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0"
-                    >
-                      Utility Classes
-                    </h6>
-                    <span class="text-sm"
-                      >For those who want flexibility, use our utility
-                      classes</span
-                    >
-                  </a>
+                      <a
+                        class="dropdown-item py-2 ps-3 border-radius-md"
+                        href="#"
+                        v-on:click="admin()"
+                      >
+                        <h6
+                          class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0"
+                        >
+                          회원 관리
+                        </h6>
+                      </a>
+                    </li>
+
+                    <li class="nav-item list-group-item border-0 p-0">
+                      <a
+                        class="dropdown-item py-2 ps-3 border-radius-md"
+                        href="#"
+                        v-on:click="logout()"
+                      >
+                        <h6
+                          class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0"
+                        >
+                          로그아웃
+                        </h6>
+                      </a>
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
           </li>
-          <!--
-          <li class="nav-item dropdown dropdown-hover mt-1 mx-2" v-if="store.state.userStore.isLogin">
-            <a>
-              <svg
-                width="20px"
-                height="20px"
-                class="material-icons  opacity-6"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-                data-testid="GitHubIcon"
-                :fill="props.transparent && '#fff'"
-              >
-                <path
-                  d="M12 1.27a11 11 0 00-3.48 21.46c.55.09.73-.28.73-.55v-1.84c-3.03.64-3.67-1.46-3.67-1.46-.55-1.29-1.28-1.65-1.28-1.65-.92-.65.1-.65.1-.65 1.1 0 1.73 1.1 1.73 1.1.92 1.65 2.57 1.2 3.21.92a2 2 0 01.64-1.47c-2.47-.27-5.04-1.19-5.04-5.5 0-1.1.46-2.1 1.2-2.84a3.76 3.76 0 010-2.93s.91-.28 3.11 1.1c1.8-.49 3.7-.49 5.5 0 2.1-1.38 3.02-1.1 3.02-1.1a3.76 3.76 0 010 2.93c.83.74 1.2 1.74 1.2 2.94 0 4.21-2.57 5.13-5.04 5.4.45.37.82.92.82 2.02v3.03c0 .27.1.64.73.55A11 11 0 0012 1.27"
-                ></path>
-              </svg>
-              {{ store.state.userStore.userInfo.id }}님
-            </a>
-          </li> 
-          -->
         </ul>
         <ul
           class="navbar-nav d-lg-block d-none"
@@ -1163,18 +495,20 @@ async function admin() {
             >
           </li>
         </ul>
-        <!--
-        <ul class="navbar-nav d-lg-block d-none" v-if="store.state.userStore.isLogin">
+        <ul
+          class="navbar-nav d-lg-none offset-10"
+          v-if="!store.state.userStore.isLogin"
+        >
           <li class="nav-item">
             <a
+              :href="action.route"
               class="btn btn-sm mb-0"
               :class="action.color"
-              v-on:click="logout();"
-              >로그아웃</a
+              onclick="smoothToPricing('pricing-soft-ui')"
+              >{{ action.label }}</a
             >
           </li>
         </ul>
-        -->
       </div>
     </div>
   </nav>

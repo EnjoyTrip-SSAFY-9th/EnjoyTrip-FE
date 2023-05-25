@@ -16,16 +16,16 @@ const router = useRouter();
 const store = useStore();
 
 const confirm = reactive({
-    password:"",
-})
+  password: "",
+});
 //사용자
 const user = reactive({
   id: store.state.userStore.userInfo.id,
   password: "",
 });
 const success = reactive({
-    password: "",
-})
+  password: "",
+});
 //에러 유형
 const error = reactive({
   password: "length",
@@ -47,20 +47,20 @@ function koreanCheck(key) {
   }
 }
 //비밀번호 일치 확인
-function isSame(){
-    // console.log(confirm.password);
-    if(user.password === confirm.password) {
-        success.password = "success";
-        error.password = "";
-    }else{
-        success.password = "";
-        error.password = "diff";
-    }
+function isSame() {
+  // console.log(confirm.password);
+  if (user.password === confirm.password) {
+    success.password = "success";
+    error.password = "";
+  } else {
+    success.password = "";
+    error.password = "diff";
+  }
 }
 
 function updateData(key) {
   // console.log(data, "  ", key);
-  success[key]="";
+  success[key] = "";
   error[key] = "";
   isSame();
   if (user[key] == "") {
@@ -68,10 +68,10 @@ function updateData(key) {
     error[key] = "length";
   }
   if (user[key].length < 4 || user[key].length >= 20) {
-      // 4자 이상 20자 미만이 아닌 경우
-      error[key] = "length";
-    }
-    koreanCheck(key);
+    // 4자 이상 20자 미만이 아닌 경우
+    error[key] = "length";
+  }
+  koreanCheck(key);
 }
 
 //유효 검사
@@ -81,8 +81,8 @@ function checkValid() {
   return false;
 }
 //비밀번호 변경
-async function changePassword(){
-    if (!checkValid()) {
+async function changePassword() {
+  if (!checkValid()) {
     return;
   }
   http.put(`/user/password`, user).then(({ data }) => {
@@ -91,66 +91,73 @@ async function changePassword(){
     toast.success("비밀번호 변경 완료", {
       autoClose: 3000,
     });
-    router.push({name: 'mypage'});
+    router.push({ name: "mypage" });
   });
 }
 </script>
 
 <template>
-    <section>
-      <div class="container mt-3">
-        <div class = "col col-lg-3 offset-lg-3">
-            <h3>비밀번호 변경</h3>
-          </div>
-        <div class="row justify-content-center">
-          <div class="col col-lg-6 d-flex justify-content-center flex-column border border-dark">
-            <table class="table mt-3">
-              <!-- <form
+  <section>
+    <div class="container mt-3">
+      <div class="col col-lg-3 offset-lg-3">
+        <h3>비밀번호 변경</h3>
+      </div>
+      <div class="row justify-content-center">
+        <div
+          class="col col-lg-6 d-flex justify-content-center flex-column border border-dark"
+        >
+          <table class="table mt-3">
+            <!-- <form
                 role="form"
                 id="contact-form"
                 method="post"
                 autocomplete="off"
                 @submit.prevent
               > -->
-              <tbody>
-                <tr>
-                  <td>새 비밀번호</td>
-                  <td><input type="password" v-model="user.password" v-on:keyup="updateData('password')" /></td>
-                </tr>
-                <tr v-if="error.password != ''" class="error-message">
-                    <td>
-                    </td>
-                    <td>
-                    <span>
-                      {{ errorMSG.password[error.password] }}
-                    </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td>새 비밀번호(확인)</td>
-                  <td>
-                    <input type="password" v-model="confirm.password" v-on:keyup="isSame()" />
-                  </td>
-                </tr>
-                <tr v-if="error.password != ''" class="error-message">
-                    <td>
-                    </td>
-                    <td>
-                    <span>
-                      {{ errorMSG.password[error.password] }}
-                    </span>
-                  </td>
-                </tr>
-                <tr v-if="success.password == 'success'" class="success-message">
-                    <td>
-                    </td>
-                    <td>
-                    <span>
-                      비밀번호가 일치합니다.
-                    </span>
-                  </td>
-                </tr>
-                <!-- <tr>
+            <tbody>
+              <tr>
+                <td>새 비밀번호</td>
+                <td>
+                  <input
+                    type="password"
+                    v-model="user.password"
+                    v-on:keyup="updateData('password')"
+                  />
+                </td>
+              </tr>
+              <tr v-if="error.password != ''" class="error-message">
+                <td></td>
+                <td>
+                  <span>
+                    {{ errorMSG.password[error.password] }}
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td>새 비밀번호(확인)</td>
+                <td>
+                  <input
+                    type="password"
+                    v-model="confirm.password"
+                    v-on:keyup="isSame()"
+                  />
+                </td>
+              </tr>
+              <tr v-if="error.password != ''" class="error-message">
+                <td></td>
+                <td>
+                  <span>
+                    {{ errorMSG.password[error.password] }}
+                  </span>
+                </td>
+              </tr>
+              <tr v-if="success.password == 'success'" class="success-message">
+                <td></td>
+                <td>
+                  <span> 비밀번호가 일치합니다. </span>
+                </td>
+              </tr>
+              <!-- <tr>
                   <td>비밀번호</td>
                   <td>
                     <div class="row justify-content-center">
@@ -167,32 +174,31 @@ async function changePassword(){
                     </div>
                   </td>
                 </tr> -->
-              </tbody>
-              <!-- </form> -->
-            </table>
-          </div>
-          
+            </tbody>
+            <!-- </form> -->
+          </table>
         </div>
-        <div class="col col-lg-2 offset-lg-7 text-center">
-              <MaterialButton
-                class="my-4 mb-2"
-                variant="gradient"
-                color="dark"
-                fullWidth
-                v-on:click="changePassword()"
-                >변경하기</MaterialButton
-              >
-            </div>
       </div>
-    </section>
-  </template>
-  <style scoped>
-  .success-message {
-    color: rgba(57, 158, 240, 0.829);
-    font-size: 14px;
-  }
-  .error-message {
-    color: rgba(231, 78, 78, 0.829);
-    font-size: 14px;
-  }
-  </style>
+      <div class="col col-lg-2 offset-lg-7 text-center">
+        <MaterialButton
+          class="my-4 mb-2"
+          variant="gradient"
+          color="dark"
+          fullWidth
+          v-on:click="changePassword()"
+          >변경하기</MaterialButton
+        >
+      </div>
+    </div>
+  </section>
+</template>
+<style scoped>
+.success-message {
+  color: rgba(57, 158, 240, 0.829);
+  font-size: 14px;
+}
+.error-message {
+  color: rgba(231, 78, 78, 0.829);
+  font-size: 14px;
+}
+</style>

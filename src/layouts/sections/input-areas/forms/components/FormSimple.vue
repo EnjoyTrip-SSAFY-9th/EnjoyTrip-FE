@@ -23,9 +23,14 @@ const user = reactive({
   name: "",
   email: "",
 });
+//비밀번호 확인용
+const current = reactive({
+  password: "",
+});
 //아이디 사용 가능 확인
 const success = reactive({
   id: "",
+  password: "",
 });
 //에러 유형
 const error = reactive({
@@ -44,6 +49,7 @@ const errorMSG = {
   password: {
     length: "비밀번호는 4자 이상 20자 미만이어야 합니다.",
     type: "비밀번호는 영어, 숫자, 특수문자만 사용 가능합니다.",
+    diff: "비밀번호가 일치하지 않습니다.",
   },
   name: {
     length: "이름은 2자 이상 6자 미만이어야 합니다.",
@@ -71,8 +77,24 @@ function koreanCheck(data, key) {
     error[key] = "type";
   }
 }
+//비밀번호 확인하는 함수
+function checkPassword() {
+  if (user.password === current.password) {
+    success.password = "success";
+    error.password = "";
+  } else {
+    if (error.password == "") error.password = "diff";
+    success.password = "";
+  }
+}
+
 function updateData(data, key) {
   // console.log(data, "  ", key);
+  if (key == "passwordCheck") {
+    current.password = data;
+    checkPassword();
+    return;
+  }
   error[key] = "";
   user[key] = data;
   //error 여부 검사
@@ -82,6 +104,9 @@ function updateData(data, key) {
   if (user[key] == "") {
     // 비어있는 경우
     error[key] = "length";
+  }
+  if (key == "password") {
+    checkPassword();
   }
   if (key == "id" || key == "password") {
     if (user[key].length < 4 || user[key].length >= 20) {
@@ -115,7 +140,8 @@ function checkValid() {
     error.password == "" &&
     error.name == "" &&
     error.email == "" &&
-    success.id == "success"
+    success.id == "success" &&
+    success.password == "success"
   )
     return true;
   return false;
@@ -183,7 +209,7 @@ function signUp() {
                 <div class="col-md-8">
                   <MaterialInput
                     class="input-group-dynamic"
-                    :label="{ text: 'id', class: 'form-label' }"
+                    :label="{ text: '아이디', class: 'form-label' }"
                     type="text"
                     name="id"
                     :user="user"
@@ -209,7 +235,7 @@ function signUp() {
               <div class="mb-4">
                 <MaterialInput
                   class="input-group-dynamic"
-                  :label="{ text: 'password', class: 'form-label' }"
+                  :label="{ text: '비밀번호', class: 'form-label' }"
                   :user="user"
                   @updateData="updateData"
                   type="password"
@@ -217,11 +243,29 @@ function signUp() {
                 <span v-if="error.password != ''" class="error-message">
                   {{ errorMSG.password[error.password] }}
                 </span>
+                <span v-if="success.password != ''" class="success-message">
+                  비밀번호가 일치합니다.
+                </span>
               </div>
               <div class="mb-4">
                 <MaterialInput
                   class="input-group-dynamic"
-                  :label="{ text: 'name', class: 'form-label' }"
+                  :label="{ text: '비밀번호 확인', class: 'form-label' }"
+                  :user="user"
+                  @updateData="updateData"
+                  type="password"
+                />
+                <span v-if="error.password != ''" class="error-message">
+                  {{ errorMSG.password[error.password] }}
+                </span>
+                <span v-if="success.password != ''" class="success-message">
+                  비밀번호가 일치합니다.
+                </span>
+              </div>
+              <div class="mb-4">
+                <MaterialInput
+                  class="input-group-dynamic"
+                  :label="{ text: '이름', class: 'form-label' }"
                   :user="user"
                   @updateData="updateData"
                   type="name"
@@ -250,7 +294,7 @@ function signUp() {
               <div class="mb-4">
                 <MaterialInput
                   class="input-group-dynamic"
-                  :label="{ text: 'email', class: 'form-label' }"
+                  :label="{ text: '이메일', class: 'form-label' }"
                   :user="user"
                   @updateData="updateData"
                   type="email"

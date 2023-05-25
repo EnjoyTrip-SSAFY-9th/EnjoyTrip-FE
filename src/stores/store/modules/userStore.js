@@ -18,7 +18,12 @@ const userStore = {
     isValidToken: false,
   },
   getters: {
+    checkLogin: function (state) {
+      // console.log(state.isValidToken);
+      return state.isLogin;
+    },
     checkUserInfo: function (state) {
+      // console.log(state.userInfo);
       return state.userInfo;
     },
     checkToken: function (state) {
@@ -36,7 +41,6 @@ const userStore = {
       state.isValidToken = isValidToken;
     },
     SET_USER_INFO: (state, userInfo) => {
-      state.isLogin = true;
       state.userInfo = userInfo;
     },
   },
@@ -116,11 +120,11 @@ const userStore = {
                 } else {
                   console.log("리프레시 토큰 제거 실패");
                 }
-                alert("RefreshToken 기간 만료!!! 다시 로그인해 주세요.");
+                alert("로그인 만료! 다시 로그인해 주세요.");
                 commit("SET_IS_LOGIN", false);
                 commit("SET_USER_INFO", null);
                 commit("SET_IS_VALID_TOKEN", false);
-                router.push({ name: "login" });
+                router.push({ name: "signin-basic" });
               },
               (error) => {
                 console.log(error);

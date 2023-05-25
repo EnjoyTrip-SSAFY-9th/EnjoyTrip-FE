@@ -44,7 +44,7 @@ async function searchUser() {
 //페이지 이동
 async function pageClick(pgno, key) {
   console.log(pgno, key);
-  console.log(navigation.value.startRange);
+  console.log(navigation);
   if (key == "before") {
     if (navigation.value.startRange) {
       pgno = 1;
@@ -104,17 +104,24 @@ async function deleteUser(id) {
                   :value="search.word"
                   @input="changeWord"
                   id="word"
-                  class="form-control"
+                  class="form-control border border-dark"
                   placeholder="검색어..."
                 />
-                <button
+                <v-btn
+                  color="blue-darken-1"
+                  class="mx-3"
+                  v-on:click="searchUser()"
+                >
+                  검색
+                </v-btn>
+                <!-- <button
                   id="btn-search"
                   class="btn btn-info"
                   type="button"
                   v-on:click="searchUser()"
                 >
                   검색
-                </button>
+                </button> -->
               </div>
             </form>
           </div>
@@ -132,7 +139,10 @@ async function deleteUser(id) {
           </thead>
           <tbody id="userinfo">
             <tr v-for="(user, index) in users" :key="user.id">
-              <td v-text="index + 1"></td>
+              <!-- <td v-text="index + 1"></td> -->
+              <td
+                v-text="index + 1 + (search.pgno - 1) * navigation.countPerPage"
+              ></td>
               <td v-text="user.name"></td>
               <td v-text="user.id"></td>
               <td v-text="user.email"></td>
