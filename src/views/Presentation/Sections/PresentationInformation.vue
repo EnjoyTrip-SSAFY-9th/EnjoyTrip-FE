@@ -9,6 +9,7 @@ import mainCard3 from "@/assets/img/mainCard3.jpg";
 import mainCard4 from "@/assets/img/mainCard4.jpg";
 import mainCard5 from "@/assets/img/mainCard5.jpg";
 import mainCard6 from "@/assets/img/mainCard7.jpg";
+import mainpage from "@/assets/img/mainpage.mp4";
 </script>
 <template>
   <section class="my-5 py-5">
@@ -29,6 +30,7 @@ import mainCard6 from "@/assets/img/mainCard7.jpg";
             />
           </RotatingCard>
         </div>
+
         <div class="col-lg-4 ms-auto me-auto p-lg-4 mt-lg-0 mt-4">
           <RotatingCard>
             <RotatingCardFront

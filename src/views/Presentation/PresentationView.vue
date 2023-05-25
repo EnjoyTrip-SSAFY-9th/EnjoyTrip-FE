@@ -21,6 +21,7 @@ import PresentationInformation from "./Sections/PresentationInformation.vue";
 
 //images
 import vueMkHeader from "@/assets/img/mainImage.jpg";
+import mainpage from "@/assets/img/mainpage.mp4";
 import wavesWhite from "@/assets/img/waves-white.svg";
 import logoBootstrap from "@/assets/img/logos/bootstrap5.jpg";
 import logoTailwind from "@/assets/img/logos/icon-tailwind.jpg";

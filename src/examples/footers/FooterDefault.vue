@@ -18,24 +18,8 @@ defineProps({
     link: String,
     default: () => [
       {
-        icon: '<i class="fab fa-facebook text-lg opacity-8"></i>',
-        link: "https://www.facebook.com/CreativeTim/",
-      },
-      {
-        icon: '<i class="fab fa-twitter text-lg opacity-8"></i>',
-        link: "https://twitter.com/creativetim",
-      },
-      {
-        icon: '<i class="fab fa-dribbble text-lg opacity-8"></i>',
-        link: "https://dribbble.com/creativetim",
-      },
-      {
         icon: '<i class="fab fa-github text-lg opacity-8"></i>',
-        link: "https://github.com/creativetimofficial",
-      },
-      {
-        icon: '<i class="fab fa-youtube text-lg opacity-8"></i>',
-        link: "https://www.youtube.com/channel/UCVyTG4sCw-rOvB9oHkzZD1w",
+        link: "https://github.com/Wanderlustify-SSAFY-9th",
       },
     ],
   },
@@ -53,11 +37,11 @@ defineProps({
         items: [
           {
             name: "지역별 관광지",
-            href: "https://www.creative-tim.com/presentation",
+            href: "/trip",
           },
           {
             name: "여행 계획",
-            href: "https://www.creative-tim.com/templates/free",
+            href: "/mytrip",
           },
           // {
           //   name: "premium tools",
@@ -69,10 +53,10 @@ defineProps({
       {
         name: "여행 정보",
         items: [
-          { name: "정보 공유", href: "https://iradesign.io/" },
+          { name: "정보 공유", href: "/board" },
           {
             name: "핫플레이스",
-            href: "https://www.creative-tim.com/bits",
+            href: "/hotplace",
           },
           // {
           //   name: "affiliate program",
@@ -159,9 +143,9 @@ defineProps({
           <h6 class="text-sm">{{ name }}</h6>
           <ul class="flex-column ms-n3 nav">
             <li class="nav-item" v-for="item of items" :key="item.name">
-              <a class="nav-link" :href="item.href" target="_blank">
+              <RouterLink class="nav-link" :to="item.href">
                 {{ item.name }}
-              </a>
+              </RouterLink>
             </li>
           </ul>
         </div>
@@ -171,10 +155,7 @@ defineProps({
             <p class="text-dark my-4 text-sm font-weight-normal">
               All rights reserved. Copyright ©
               {{ new Date().getFullYear() }}
-              Wanderlustify by
-              <a href="https://www.creative-tim.com" target="_blank"
-                >SSAFY 9th</a
-              >.
+              Wanderlustify by SSAFY 9th .
             </p>
           </div>
         </div>
