@@ -2,6 +2,7 @@
 import router from "@/router";
 import {
   gethotplaceList,
+  getRecommendhotplaceList,
   showhotplaceDetail,
   writehotplace,
   writehotplaceFile,
@@ -18,6 +19,7 @@ const hotplaceStore = {
     key: "",
     word: "",
     hotplaces: null,
+    recList: null, // 유저가 추천한 핫플 리스트
     hotplace: {
       title: "",
       content: "",
@@ -48,6 +50,9 @@ const hotplaceStore = {
     SET_HOTPLACES: (state, hotplaces) => {
       state.hotplaces = hotplaces;
     },
+    SET_RECOMMENDLIST: (state, recList) => {
+      state.recList = recList;
+    },
     SET_HOTPLACE: (state, hotplace) => {
       state.hotplace = hotplace;
     },
@@ -71,6 +76,21 @@ const hotplaceStore = {
           commit("SET_HOTTOP3", data.top3);
           commit("SET_HOTPLACES", data.list);
           commit("SET_NAVIGATION", data.navigation);
+          console.log("3. getUsersInfo data >> ", data);
+        },
+        async (error) => {
+          console.log(
+            "gethotplaces() error code [] ::: ",
+            error.response.status
+          );
+        }
+      );
+    },
+    async getRecommendhotplaces({ commit }, userId) {
+      await getRecommendhotplaceList(
+        userId,
+        ({ data }) => {
+          commit("SET_RECOMMENDLIST", data.list);
           console.log("3. getUsersInfo data >> ", data);
         },
         async (error) => {
@@ -209,10 +229,10 @@ const hotplaceStore = {
         }
       );
     },
-    async recommend({ state, commit, dispatch }, hotplaceNo) {
-      console.log(hotplaceNo);
+    async recommend({ state, commit, dispatch }, { param }) {
+      console.log(param);
       await recommendhotplace(
-        hotplaceNo,
+        { param },
         async ({ data }) => {
           const search = {
             sort: state.sort,
@@ -221,7 +241,7 @@ const hotplaceStore = {
             word: state.word,
           };
           await dispatch("gethotplaces", { search }); // 게시글 다시 불러오기
-          console.log("recommend hotplace>> ", hotplaceNo);
+          console.log("recommend hotplace>> ", param);
         },
         async (error) => {
           console.log(

@@ -104,6 +104,19 @@ const getHotPlaces = async (to, from, next) => {
   next();
 };
 
+const getRecommendHotPlaces = async (to, from, next) => {
+  // const search = {
+  //   pgno: store.state.hotplaceStore.pgno,
+  //   key: store.state.hotplaceStore.key,
+  //   word: store.state.hotplaceStore.word,
+  // };
+  await store.dispatch(
+    "hotplaceStore/getRecommendhotplaces",
+    store.state.userStore.userInfo.id
+  );
+  next();
+};
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -265,10 +278,11 @@ const router = createRouter({
       path: "/mypage",
       name: "mypage",
       component: MyPage,
+      beforeEnter: onlyAuthUser,
       redirect: "/mypage/info",
       children: [
         {
-          beforeEnter: onlyAuthUser,
+          beforeEnter: getRecommendHotPlaces,
           path: "info",
           component: UserInfo,
         },

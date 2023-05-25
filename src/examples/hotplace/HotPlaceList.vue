@@ -108,7 +108,11 @@ async function deleteEvent(hotplaceNo) {
 }
 //핫플 글 추천
 async function recommendEvent(hotplaceNo) {
-  await store.dispatch("hotplaceStore/recommend", hotplaceNo);
+  const param = {
+    hotplaceNo: hotplaceNo,
+    userId: store.state.userStore.userInfo.id,
+  };
+  await store.dispatch("hotplaceStore/recommend", { param });
 }
 </script>
 
@@ -229,7 +233,7 @@ async function recommendEvent(hotplaceNo) {
           <div class="row">
             <HotPlaceDetail
               v-for="(article, index) in articles"
-              :key="article.commentNo"
+              :key="article.hotplaceNo"
               :article="article"
               :index="index"
               :backend_base_url="backend_base_url"

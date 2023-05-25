@@ -4,10 +4,12 @@ import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { computed } from "vue";
 import http from "@/api/http.js";
+import HotPlaceDetail from "../hotplace/HotPlaceDetail.vue";
 
 const router = useRouter();
 const store = useStore();
 const userInfo = computed(() => store.state.userStore.userInfo);
+const backend_base_url = import.meta.env.VITE_BACKEND_BASE_URL;
 </script>
 
 <template>
@@ -97,14 +99,31 @@ const userInfo = computed(() => store.state.userStore.userInfo);
     <section class="section">
       <div class="container mt-3">
         <div class="row justify-content-center">
-          <div class="col-lg-6 text-center">
-            <h3>내가 좋아요한 핫플레이스 목록 보러가기</h3>
-            <div class="border border-dark"></div>
+          <div class="text-center mt-5">
+            <h3>내가 좋아요한 핫플레이스 목록</h3>
+            <div class="mt-5">
+              <div class="row" v-if="store.state.hotplaceStore.recList != null">
+                <HotPlaceDetail
+                  v-for="(article, index) in store.state.hotplaceStore.recList"
+                  :key="article.hotplaceNo"
+                  :article="article"
+                  :index="index"
+                  :backend_base_url="backend_base_url"
+                  :user-id="store.state.userStore.userInfo.id"
+                ></HotPlaceDetail>
+              </div>
+              <div
+                class="col-lg-6 offset-lg-2"
+                v-if="store.state.hotplaceStore.recList == null"
+              >
+                아직 좋아요한 핫플레이스가 없습니다...
+              </div>
+            </div>
           </div>
-          <div class="col-lg-6 text-center">
+          <!-- <div class="col-lg-6 mt-5 text-center">
             <h3>내가 추천한 여행 정보 공유글</h3>
             <div class="border border-dark"></div>
-          </div>
+          </div> -->
         </div>
       </div>
     </section>

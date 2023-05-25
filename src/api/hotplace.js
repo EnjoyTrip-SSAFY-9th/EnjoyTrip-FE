@@ -16,6 +16,10 @@ async function gethotplaceList({ search }, success, fail) {
     .catch(fail);
 }
 
+async function getRecommendhotplaceList(userId, success, fail) {
+  await api.get(`/hotplace/list/recommend/${userId}`).then(success).catch(fail);
+}
+
 async function showhotplaceDetail(hotplaceNo, success, fail) {
   await api.get(`/hotplace/${hotplaceNo}`).then(success).catch(fail);
 }
@@ -42,12 +46,18 @@ async function deletehotplace(hotplaceNo, success, fail) {
   await api.delete(`/hotplace/${hotplaceNo}`).then(success).catch(fail);
 }
 
-async function recommendhotplace(hotplaceNo, success, fail) {
-  await api.put(`/hotplace/recommend/${hotplaceNo}`).then(success).catch(fail);
+async function recommendhotplace({ param }, success, fail) {
+  await api
+    .get(`/hotplace/recommend/${param.hotplaceNo}`, {
+      params: { userId: param.userId, hotplaceNo: param.hotplaceNo },
+    })
+    .then(success)
+    .catch(fail);
 }
 
 export {
   gethotplaceList,
+  getRecommendhotplaceList,
   showhotplaceDetail,
   writehotplace,
   modifyhotplace,
