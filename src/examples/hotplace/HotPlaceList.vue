@@ -262,7 +262,7 @@ async function recommendEvent(hotplaceNo) {
         >
           <a
             href="#"
-            class="page-link bg-danger"
+            class="page-link bg-danger text-white"
             v-on:click="pageClick(page, '')"
             v-if="page == navigation.currentPage"
             >{{ page }}</a

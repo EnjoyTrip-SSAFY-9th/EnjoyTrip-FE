@@ -184,7 +184,11 @@ const hotplaceStore = {
         async ({ data }) => {
           console.log(data);
           if (data.message === "success") {
-            commit("SET_HOTPLACE", null);
+            const hotplace = {
+              title: "",
+              address: "",
+            };
+            commit("SET_HOTPLACE", hotplace);
             const search = {
               sort: "hotplace_no",
               pgno: state.pgno,

@@ -20,6 +20,7 @@ export default {
   }),
   methods: {
     deleteHotPlace() {
+      this.show = false;
       this.$emit("delete-event", this.article.hotplaceNo);
     },
     recommendHotPlace() {

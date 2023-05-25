@@ -1,4 +1,5 @@
 <script setup>
+import { ref } from "vue";
 import { reactive } from "vue";
 import { useRouter } from "vue-router";
 import MaterialButton from "@/components/MaterialButton.vue";
@@ -11,12 +12,34 @@ const router = useRouter();
 const store = useStore();
 
 //검색에 필요한 pgno, key, word
-const search = reactive({
+// const search = reactive({
+//   type: computed(() => store.state.boardStore.type),
+//   pgno: "1",
+//   key: "",
+//   word: "",
+// });
+const selectedItem = reactive({
   type: computed(() => store.state.boardStore.type),
+  sort: store.state.boardStore.sortName,
   pgno: "1",
   key: "",
   word: "",
 });
+const sortValue = ref({
+  기본: "article_no",
+  추천수: "recommendation",
+  댓글수: "comment",
+  조회수: "hit",
+  작성일: "date",
+});
+const keyValue = ref({
+  제목: "subject",
+  작성자: "username",
+  내용: "content",
+});
+
+const sortItems = ref(["기본", "추천수", "댓글수", "조회수", "작성일"]);
+const searchItems = ref(["제목", "작성자", "내용"]);
 
 // getUsers로 받은 데이터 맵
 // const map = ref("");
@@ -36,12 +59,19 @@ const articles = computed(() => store.state.boardStore.boards);
 
 //한글 입력 바인딩 처리
 function changeWord(e) {
-  search.word = e.target.value;
-  console.log(search);
+  selectedItem.word = e.target.value;
+  console.log(selectedItem);
 }
 // 회원 검색
 async function searchBoard() {
-  console.log(search);
+  const search = {
+    type: selectedItem.type,
+    sort: sortValue.value[selectedItem.sort],
+    pgno: selectedItem.pgno,
+    key: keyValue.value[selectedItem.key],
+    word: selectedItem.word,
+  };
+  if (search.key == undefined) search.key = "";
   await store.dispatch("boardStore/getBoards", { search });
 }
 //게시글 상세보기
@@ -66,6 +96,16 @@ async function pageClick(pgno, key) {
     }
   }
   search.pgno = pgno;
+  selectedItem.pgno = pgno;
+  console.log(selectedItem);
+  const search = {
+    type: selectedItem.type,
+    sort: sortValue.value[selectedItem.sort],
+    pgno: selectedItem.pgno,
+    key: keyValue.value[selectedItem.key],
+    word: selectedItem.word,
+  };
+  if (search.key == undefined) search.key = "";
   console.log(search);
   await store.dispatch("boardStore/getBoards", { search });
 }
@@ -102,7 +142,7 @@ function showTime(date) {
     <div class="row no-gutters" style="background-color: white">
       <div class="text-center">
         <h3 class="my-5 fw-bold">여행정보공유</h3>
-        <div class="row w-75 mx-auto mb-3">
+        <!-- <div class="row w-75 mx-auto mb-3">
           <div class="col-md-2 m-0" v-if="store.state.userStore.isLogin">
             <button
               id="btn-search"
@@ -120,7 +160,6 @@ function showTime(date) {
               id="form-search"
               @submit.prevent
             >
-              <!-- <input type="hidden" name="pgno" value="1" /> -->
               <select
                 v-model="search.key"
                 id="key"
@@ -155,7 +194,93 @@ function showTime(date) {
               </div>
             </form>
           </div>
+        </div> -->
+        <div class="row m-0">
+          <div
+            class="col-lg-2 offset-lg-1"
+            v-if="store.state.userStore.isLogin"
+          >
+            <button
+              id="btn-search"
+              class="btn btn-success"
+              type="button"
+              v-on:click="writeHotPlace"
+            >
+              등록
+            </button>
+          </div>
+          <!-- <div class="col-lg-3"></div> -->
+          <div class="col-lg-5 offset-lg-3 align-self-end">
+            <div class="row">
+              <div class="col-lg-3 m-0 p-0">
+                <v-select
+                  v-model="selectedItem.sort"
+                  :items="sortItems"
+                  label="정렬 기준"
+                  required
+                  @input="searchBoard"
+                ></v-select>
+              </div>
+              <div class="col-lg-3 m-0 p-0">
+                <v-select
+                  v-model="selectedItem.key"
+                  :items="searchItems"
+                  label="검색 조건"
+                  required
+                ></v-select>
+              </div>
+              <div class="col-lg-6">
+                <form
+                  class="d-flex justify-content-center"
+                  id="form-search"
+                  @submit.prevent
+                >
+                  <!-- <input type="hidden" name="pgno" value="1" /> -->
+                  <!-- <select
+                    v-model="search.key"
+                    id="key"
+                    class="form-select form-select-sm mr-5 w-20"
+                    aria-label="검색조건"
+                  >
+                    <option selected>검색조건</option>
+                    <option value="title">장소</option>
+                    <option value="username">작성자</option>
+                    <option value="content">내용</option>
+                  </select> -->
+                  <div
+                    class="input-group input-group-sm justify-conent-center"
+                    style="width: 300px"
+                  >
+                    <input
+                      type="text"
+                      :value="selectedItem.word"
+                      @input="changeWord"
+                      id="word"
+                      class="form-control border border-dark"
+                      placeholder="검색어..."
+                    />
+                    <v-btn
+                      color="green-darken-1"
+                      class="mx-3"
+                      v-on:click="searchBoard()"
+                    >
+                      검색
+                    </v-btn>
+                    <!-- <button
+                  id="btn-search"
+                  class="btn btn-primary"
+                  type="button"
+                  v-on:click="searchHotPlace()"
+                >
+                  검색
+                </button> -->
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
         </div>
+
         <table class="table table-hover w-75 m-auto mb-3">
           <colgroup>
             <col width="15%" />
@@ -179,7 +304,9 @@ function showTime(date) {
             <tr v-for="(article, index) in articles" :key="article.articleNo">
               <!-- <td v-text="index + 1"></td> -->
               <td
-                v-text="index + 1 + (search.pgno - 1) * navigation.countPerPage"
+                v-text="
+                  index + 1 + (selectedItem.pgno - 1) * navigation.countPerPage
+                "
               ></td>
               <td
                 @mouseover="changeCursor"
@@ -224,7 +351,7 @@ function showTime(date) {
         >
           <a
             href="#"
-            class="page-link bg-success"
+            class="page-link bg-success text-white"
             v-on:click="pageClick(page, '')"
             v-if="page == navigation.currentPage"
             >{{ page }}</a
@@ -262,11 +389,11 @@ function showTime(date) {
       <!-- <div v-html="navigation.navigator"></div> -->
     </div>
   </div>
-  <form id="form-param" method="get" action="">
+  <!-- <form id="form-param" method="get" action="">
     <input type="hidden" name="pgno" id="pgno" :value="search.pgno" />
     <input type="hidden" name="key" :value="search.key" />
     <input type="hidden" name="word" :value="search.word" />
-  </form>
+  </form> -->
   <!-- <form id="form-no-param" method="get">
     <input type="hidden" name="pgno" id="pgno" :value="search.pgno" />
     <input type="hidden" name="key" :value="search.key" />

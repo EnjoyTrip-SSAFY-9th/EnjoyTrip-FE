@@ -7,6 +7,7 @@ async function getBoardList({ search }, success, fail) {
     .get(`/board/`, {
       params: {
         type: search.type,
+        sort: search.sort,
         pgno: search.pgno,
         key: search.key,
         word: search.word,

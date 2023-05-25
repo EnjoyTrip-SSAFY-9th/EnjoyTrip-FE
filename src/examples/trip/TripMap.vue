@@ -258,7 +258,7 @@ onMounted(() => {
 
 <template>
   <div class="mytrip" v-if="props.mytriplist.length > 0">
-    <v-card-title>{{ max + 1 }}번 여행계획</v-card-title>
+    <v-card-title>{{ (max || 0) + 1 }}번 여행계획</v-card-title>
     <v-timeline direction="horizontal">
       <v-timeline-item v-for="(item, index) in props.mytriplist" :key="index">
         <template v-slot:opposite>{{ item.title }} </template>

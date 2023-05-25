@@ -14,7 +14,7 @@ import imgSigninCover from "@/assets/img/signin-cover.png";
             <div class="col-md-6 mt-md-0 mt-5">
               <ExampleCard
                 class="shadow-lg"
-                title="About Us Page"
+                title="지역별 관광지"
                 image="https://raw.githubusercontent.com/creativetimofficial/public-assets/master/material-design-system/presentation/pages/about-us.jpg"
                 route="about"
               />
@@ -22,7 +22,7 @@ import imgSigninCover from "@/assets/img/signin-cover.png";
             <div class="col-md-6 mt-md-0 mt-5">
               <ExampleCard
                 class="shadow-lg"
-                title="Contact Us Page"
+                title="여행 계획"
                 image="https://raw.githubusercontent.com/creativetimofficial/public-assets/master/material-design-system/presentation/pages/contact.jpg"
                 route="contactus"
               />
@@ -32,7 +32,7 @@ import imgSigninCover from "@/assets/img/signin-cover.png";
             <div class="col-md-6 mt-md-0 mt-5">
               <ExampleCard
                 classes="mt-5"
-                title="Sign In Page"
+                title="여행 정보 공유"
                 :image="imgSigninCover"
                 route="signin-basic"
               />
@@ -40,7 +40,7 @@ import imgSigninCover from "@/assets/img/signin-cover.png";
             <div class="col-md-6 mt-md-0 mt-5">
               <ExampleCard
                 classes="shadow-lg"
-                title="Author Page"
+                title="핫플레이스"
                 image="https://raw.githubusercontent.com/creativetimofficial/public-assets/master/material-design-system/presentation/pages/author.jpg"
                 route="author"
               />

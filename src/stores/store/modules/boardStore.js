@@ -14,12 +14,14 @@ const boardStore = {
   namespaced: true,
   state: {
     type: "notice",
+    sort: "article_no",
+    sortName: "기본",
     pgno: "1",
     key: "",
     word: "",
     boards: null,
     board: null,
-    now: null,
+    now: null, // 지금 시간
     navigation: null,
   },
   getters: {
@@ -30,6 +32,12 @@ const boardStore = {
   mutations: {
     SET_TYPE: (state, type) => {
       state.type = type;
+    },
+    SET_SORT: (state, sort) => {
+      state.sort = sort;
+    },
+    SET_SORTNAME: (state, sortName) => {
+      state.sortName = sortName;
     },
     SET_PGNO: (state, pgno) => {
       state.pgno = pgno;

@@ -77,12 +77,25 @@ async function handleReset() {
       <div class="row no-gutters" style="background-color: white">
         <div class="p-5">
           <!-- ===== update start ===== -->
-          <div class="modal-header mb-3">
-            <h4 class="modal-title">
-              <h3 class="fw-bold border-bottom border-primary border-5">
-                나만의 핫플레이스
-              </h3>
-            </h4>
+          <div class="row">
+            <div class="col-lg-3">
+              <div class="modal-header mb-3">
+                <h4 class="modal-title">
+                  <h3 class="fw-bold border-bottom border-primary border-5">
+                    나만의 핫플레이스
+                  </h3>
+                </h4>
+              </div>
+            </div>
+            <div class="col-lg-2 offset-lg-5">
+              <h4 class="modal-title">
+                <h3
+                  class="col-lg-9 fw-bold border-bottom border-primary border-5"
+                >
+                  미리보기
+                </h3>
+              </h4>
+            </div>
           </div>
           <div class="row">
             <div class="col-lg-6">
@@ -123,7 +136,6 @@ async function handleReset() {
               </form>
             </div>
             <div class="col-lg-6">
-              <h4 class="offset-lg-3">미리보기</h4>
               <v-card class="mx-auto" max-width="344">
                 <v-img
                   :src="image.preview"

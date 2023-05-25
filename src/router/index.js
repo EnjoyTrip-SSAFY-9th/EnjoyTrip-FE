@@ -79,6 +79,7 @@ const getBoards = async (to, from, next) => {
   console.log(date);
   const search = {
     type: store.state.boardStore.type,
+    sort: store.state.boardStore.sort,
     pgno: store.state.boardStore.pgno,
     key: store.state.boardStore.key,
     word: store.state.boardStore.word,
