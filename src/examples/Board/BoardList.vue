@@ -95,7 +95,7 @@ async function pageClick(pgno, key) {
       pgno = pgno + 1;
     }
   }
-  search.pgno = pgno;
+  // search.pgno = pgno;
   selectedItem.pgno = pgno;
   console.log(selectedItem);
   const search = {
@@ -204,7 +204,7 @@ function showTime(date) {
               id="btn-search"
               class="btn btn-success"
               type="button"
-              v-on:click="writeHotPlace"
+              v-on:click="writeBoard"
             >
               등록
             </button>

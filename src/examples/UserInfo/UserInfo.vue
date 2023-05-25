@@ -94,5 +94,19 @@ const userInfo = computed(() => store.state.userStore.userInfo);
         </div>
       </div>
     </section>
+    <section class="section">
+      <div class="container mt-3">
+        <div class="row justify-content-center">
+          <div class="col-lg-6 text-center">
+            <h3>내가 좋아요한 핫플레이스 목록 보러가기</h3>
+            <div class="border border-dark"></div>
+          </div>
+          <div class="col-lg-6 text-center">
+            <h3>내가 추천한 여행 정보 공유글</h3>
+            <div class="border border-dark"></div>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 </template>
