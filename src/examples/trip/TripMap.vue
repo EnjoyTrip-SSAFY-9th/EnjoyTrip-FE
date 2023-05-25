@@ -88,7 +88,7 @@ function add(contentid, title) {
   const data = {
     content_id: contentid,
     user_id: userInfo.value.id,
-    user_mytrip_no: max.value + 1,
+    user_mytrip_no: (max.value || 0) + 1,
   };
   emit("addMytriplist", { ...data, title });
   // mytriplist.value.push({ ...data, title });
