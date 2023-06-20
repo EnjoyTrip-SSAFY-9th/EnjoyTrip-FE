@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import PresentationView from "../views/Presentation/PresentationView.vue";
 import SignInBasicView from "../views/LandingPages/SignIn/BasicView.vue";
+import InputAreasForms from "../layouts/sections/input-areas/forms/FormsView.vue";
 import BoardView from "../views/Board/BoardView.vue";
 import BoardList from "../examples/Board/BoardList.vue";
 import BoardDetail from "../examples/Board/BoardDetail.vue";
@@ -102,6 +103,11 @@ const router = createRouter({
       path: "/pages/landing-pages/basic",
       name: "signin-basic",
       component: SignInBasicView, // 로그인
+    },
+    {
+      path: "/sections/input-areas/forms",
+      name: "inputareas-forms",
+      component: InputAreasForms,
     },
     {
       path: "/board",
