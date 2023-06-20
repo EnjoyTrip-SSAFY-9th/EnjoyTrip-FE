@@ -2,14 +2,12 @@
 import RotatingCard from "../../../examples/cards/rotatingCards/RotatingCard.vue";
 import RotatingCardFront from "../../../examples/cards/rotatingCards/RotatingCardFront.vue";
 import RotatingCardBack from "../../../examples/cards/rotatingCards/RotatingCardBack.vue";
-import DefaultInfoCard from "../../../examples/cards/infoCards/DefaultInfoCard.vue";
 import mainCard1 from "@/assets/img/mainCard1.jpg";
 import mainCard2 from "@/assets/img/mainCard2.jpg";
 import mainCard3 from "@/assets/img/mainCard3.jpg";
 import mainCard4 from "@/assets/img/mainCard4.jpg";
 import mainCard5 from "@/assets/img/mainCard5.jpg";
 import mainCard6 from "@/assets/img/mainCard7.jpg";
-import mainpage from "@/assets/img/mainpage.mp4";
 </script>
 <template>
   <section class="my-5 py-5">

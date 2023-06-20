@@ -1,10 +1,7 @@
 <script setup>
 import ExampleCard from "../Components/ExampleCard.vue";
-import MaterialBadge from "../../../components/MaterialBadge.vue";
 
 // images
-import imgSigninCover from "@/assets/img/signin-cover.png";
-import loginpage from "@/assets/img/loginpage.png";
 import boardpage from "@/assets/img/boardpage.png";
 import mytrippage from "@/assets/img/mytrippage.png";
 import hotplacepage from "@/assets/img/hotplacepage.png";
